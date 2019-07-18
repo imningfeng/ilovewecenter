@@ -37,3 +37,7 @@
 /page/links===/links/  
 
 **请保持网站伪静态开启！！！**
+
+## 其他备注
+未登录用户，网站首页会显示一个banner，不喜欢的同学可以去把这个文件删掉，或者清空里面的内容：
+`/views/ilovewecenter/global/guest_banner.tpl.htm`
