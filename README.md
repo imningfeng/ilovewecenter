@@ -5,8 +5,7 @@
 
 不知道该说些什么，WeCenter牛逼！
 
-演示地址：https://www.dalaofang.com/
-
+演示地址：www.dalaofang.com
 ## 安装方法
 
 1. 上传压缩包到网站根目录，并且解压；
