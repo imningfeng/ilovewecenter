@@ -29,11 +29,11 @@
 
 将下面的6条规则加入到全局设置 - 站点设置 - URL 链接显示样式规则当中：
 
-/page/about===/about/
-/page/advertise===/advertise/
-/page/contacts===/contacts/
-/page/job===/job/
-/page/copyright===/copyright/
-/page/links===/links/
+/page/about===/about/  
+/page/advertise===/advertise/  
+/page/contacts===/contacts/  
+/page/job===/job/  
+/page/copyright===/copyright/  
+/page/links===/links/  
 
 **请保持网站伪静态开启！！！**
