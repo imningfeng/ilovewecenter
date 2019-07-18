@@ -1,0 +1,45 @@
+<?php TPL::output('m/header_meta.tpl.htm'); ?>
+<!--访客-->
+
+<div class="User_list" >
+	<ul id="tj_lists">
+    	
+    </ul>
+
+    <div class="load_more" id="load_explore" data-page="0" data-uid="<?php echo $this->uid; ?>" data-check="1" ><a href="#"><img src="<?php echo G_STATIC_URL; ?>/mobile/images/loading.gif"></a></div>
+    <!-- <div class="mod-footer">
+        <a id="load_explore" data-page="0" data-uid="<?php echo $this->uid; ?>" class="aw-load-more" auto-load="false"><i class="icon icon-loading icon-spin"></i> <span><?php _e('更多'); ?></span></a>
+    </div> -->
+</div>
+<!--访客end-->
+<script type="text/javascript">
+      $(function(){
+
+           var data = new Object();
+           data.uid = $("#load_explore").attr('data-uid');
+           AWS.load_visitor_view(G_BASE_URL + '/m/ajax/visitor/',data,$("#load_explore"),$("#tj_lists"),$("#load_explore").attr('data-page'));
+           
+           $(window).bind('scroll',function(){
+                if($(document).scrollTop()==$(document).height()-$(window).height()){
+                    if($("#load_explore").attr('data-check') == 1)
+                    {  
+                       $("#load_explore").show();
+                       AWS.load_visitor_view(G_BASE_URL + '/m/ajax/visitor/',data,$("#load_explore"),$("#tj_lists"),$("#load_explore").attr('data-page')); 
+                    }
+                       
+                }
+            });
+           $("#load_explore").click(function(){
+                  AWS.load_visitor_view(G_BASE_URL + '/m/ajax/visitor/',data,$("#load_explore"),$("#tj_lists"),$("#load_explore").attr('data-page'));     
+            })
+      })
+</script>
+
+
+
+
+
+
+
+
+

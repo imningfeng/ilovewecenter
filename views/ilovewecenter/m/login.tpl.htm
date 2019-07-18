@@ -1,0 +1,43 @@
+<?php TPL::output('m/header_meta.tpl.htm'); ?>
+<body style="background:#FFF;">
+<article class="l-logo">
+    <img src="<?php echo G_STATIC_URL; ?>/mobile/img/login-logo.png" alt="" width="198"/>
+</article>
+
+<article class="frombox">
+ <form id="login_form" method="post" onsubmit="return false;" action="account/ajax/login_process/">
+    <ul>
+        <li>
+            <i><img src="<?php echo G_STATIC_URL; ?>/mobile/images/name.png"></i>
+            <input name="user_name" type="text" class="name" placeholder="<?php echo (get_hook_config('mobile_regist')['login_type']['value']=='double' and get_hook_info('mobile_regist')['state']==1 )?'邮箱/手机号/':(get_hook_config('mobile_regist')['login_type']['value']=='mobile'?'手机号/':'邮箱/');?><?php _e('用户名'); ?>">
+        </li>
+        <li>
+            <i><img src="<?php echo G_STATIC_URL; ?>/mobile/images/pass.png"></i>
+            <input type="password" class="pass" placeholder="请输入密码" onkeydown="if (event.keyCode == 13) {$('#aw-login-user-repassword').val(encrypt_pass($('.pass').val())); AWS.ajax_post($('#login_form')); }">
+            <input id="aw-login-user-repassword" type="hidden" name="password" />
+        </li>
+    </ul>
+    <span class="loginbut"><input name="" type="button" value="登 录" onclick="$('#aw-login-user-repassword').val(encrypt_pass($('.pass').val()));AWS.ajax_post($('#login_form'));"></span>
+    
+    <span class="otherinfo clearfix"> 
+        <a href="m/register/" class="clickreg"><img src="<?php echo G_STATIC_URL; ?>/mobile/images/reg.png">点击注册</a>
+        <a href="m/" class="youk"><img src="<?php echo G_STATIC_URL; ?>/mobile/images/fk.png">游客访问</a>       
+        <a href="m/find_password/" class="findpass"><img src="<?php echo G_STATIC_URL; ?>/mobile/images/pass.png">找回密码</a> 
+    </span>
+    <?php if (get_setting('sina_weibo_enabled') == 'Y' || get_setting('qq_login_enabled') == 'Y') { ?>
+    <p class="linestyle clearfix">
+        <em>或者</em><i></i>
+        <span>
+        <?php if (get_setting('sina_weibo_enabled') == 'Y') { ?>
+            <a href="account/openid/weibo/bind/"><img src="<?php echo G_STATIC_URL; ?>/mobile/images/wb.png">微博登录</a>
+        <?php } ?>
+        <?php if (get_setting('qq_login_enabled') == 'Y') { ?>
+            <a href="account/openid/qq/bind/"><img src="<?php echo G_STATIC_URL; ?>/mobile/images/wx.png">QQ登录</a>
+        <?php } ?>
+        </span>
+    </p>
+    <?php } ?>
+</form>
+</article>
+
+<?php TPL::output('m/footer.tpl.htm'); ?>

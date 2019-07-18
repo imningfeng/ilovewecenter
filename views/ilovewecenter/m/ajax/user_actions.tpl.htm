@@ -1,0 +1,33 @@
+<?php if (is_array($this->list) && $this->list) { ?>
+<?php foreach ($this->list AS $key => $val) { ?>
+<?php if ($val['article_info'] AND $val['associate_action'] != ACTION_LOG::ADD_COMMENT_ARTICLE) { ?>
+<dl>
+    <dt>
+        <a href="<?php echo $val['link']; ?>" ><?php echo cjk_substr($val['title'],0, 50, 'UTF-8','....'); ?></a>
+    </dt>
+    <dd>
+    	<span>
+    		<a href="people/<?php echo $val['user_info']['user_name']; ?>"><img src="<?php echo get_avatar_url($val['uid'], 'max'); ?>"></a>
+	        <a href="people/<?php echo $val['user_info']['user_name'];?>"><?php echo $val['user_info']['user_name']; ?></a>
+        </span>
+        <label><?php echo date_friendly($val['add_time'], 604800, 'Y-m-d'); ?></label>
+        <label><?php _e('%s 次浏览', $val['article_info']['views']); ?> • </label>
+        <label><?php _e('%s 个评论', $val['article_info']['comments']); ?> • </label>
+    </dd>
+</dl>
+<?php } else { ?>
+<dl>
+    <dt>
+        <a href="<?php echo $val['link']; ?>" ><?php echo $val['last_action_str']; ?>:<?php echo cjk_substr($val['title'],0, 50, 'UTF-8','....'); ?></a>
+    </dt>
+    <dd>
+    	<span>
+    		<a href="people/<?php echo $val['user_info']['user_name']; ?>"><img src="<?php echo get_avatar_url($val['uid'], 'max'); ?>"></a>
+	        <a href="people/<?php echo $val['user_info']['user_name'];?>"><?php echo $val['user_info']['user_name']; ?></a>
+        </span>
+        <label><?php echo date_friendly($val['add_time'], 604800, 'Y-m-d'); ?></label>
+    </dd>
+</dl>
+<?php } ?>
+<?php } ?>
+<?php } ?>

@@ -1,0 +1,29 @@
+<?php if (is_array($this->list)) { ?>
+<?php foreach ($this->list AS $key => $val) { ?>
+<dl>
+    <dt>
+        <a onclick="AWS.DingTalk.open('<?php echo $val["link"] ?>')" ><?php echo cjk_substr($val['title'],0, 50, 'UTF-8','....'); ?></a>
+
+        <div class="post_box">
+            <div class="post_jj">
+                <p style="word-wrap:break-word;word-break:break-all;">
+                    <?php echo cjk_substr(trim(strip_tags(FORMAT::parse_attachs(FORMAT::parse_bbcode($val['answer_info']['answer_content'])))),0, 150, 'UTF-8','....'); ?>
+                </p>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </dt>
+    <dd>
+        <span><a href="people/<?php echo $val['user_info']['user_name']; ?>"><img src="<?php echo get_avatar_url($val['uid'], 'max'); ?>"></a>
+        <a href="people/<?php echo $val['user_info']['user_name'];?>">
+        <?php echo $val['user_info']['user_name']; ?>
+        </a>
+        </span>
+        <label><img src="<?php echo G_STATIC_URL; ?>/mobile/images/comment.png">
+        <?php echo $val['question_info']['focus_count']; ?>
+        </label>
+        <label><img src="<?php echo G_STATIC_URL; ?>/mobile/images/zan_ico2.png"><?php echo $val['question_info']['comment_count']; ?></label>
+    </dd>
+</dl>
+<?php } ?>
+<?php } ?>

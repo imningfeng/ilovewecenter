@@ -1,0 +1,55 @@
+      <?php foreach($this->data as $k=>$v):?>
+        <li>
+            <article class="list findlist" style="height: auto;"
+            <?php if(!strip_tags(preg_replace('/\[attach\]([0-9]+)\[\/attach]/', '', $v['content']))){ ?>
+            style="height:130px;"
+            <?php } ?>
+            >
+                <h1
+                <?php if($v['type']==1):?>onclick="location.href='<?php echo get_js_url("/m/article/" . $v["id"]); ?>'"
+                <?php else:?>
+                onclick="location.href='<?php echo get_js_url("/m/question/" . $v["id"]); ?>'"
+                <?php endif;?>
+                ><?php echo $v['title']; ?>
+                </h1>
+                <a href="people/<?php echo $v['user_name']; ?>" class="autohead">
+                    <?php if ($v['anonymous'] <> 1): ?><img
+                        src="<?php echo get_avatar_url($v['uid'],'max'); ?>"/><?php else: ?>
+                    <img src="<?php echo get_avatar_url(0,'max'); ?>"/><?php endif; ?>
+                    <h6><?php if ($v['anonymous'] <> 1): ?><?php echo $v['user_name']; ?><?php else: ?><?php echo '匿名'; ?><?php endif; ?></h6>
+                </a>
+                <dl class="listbox clearfix"
+                <?php if($v['type']==1):?>onclick="location.href='<?php echo get_js_url("/m/article/" . $v["id"]) ?>'"
+                <?php else:?>
+                onclick="location.href='<?php echo get_js_url("/m/question/" . $v["id"]) ?>'"
+                <?php endif;?>
+                >
+                    <?php if($v['article_img']!=1 && $v['article_img'] && strpos($v['article_img'],'default-cover') === false){ ?>
+                    <dt><img src="<?php echo $v['article_img']; ?>"></dt>
+                    <?php } ?>
+                    <?php if(strip_tags(preg_replace('/\[attach\]([0-9]+)\[\/attach]/', '', $v['content']))){ ?>
+                        <dd <?php if($v['article_img']==1 || !$v['article_img'] || strpos($v['article_img'],'default-cover') !== false){ ?>style="width:100%;height:auto;"<?php } ?>>
+                            <?php echo(cjk_substr(str_replace(array("\r", "\n"), array(' ', ' '), strip_tags(preg_replace('/\[attach\]([0-9]+)\[\/attach]/', '', $v['content']))), 0, 100, 'UTF-8', '...')) ?>
+                        </dd>
+                    <?php } ?>
+                </dl>
+                <span class="listbottom">
+                    <?php if($v['article_img']!=1){ ?>
+                    <em><img src="<?php echo base_url();?>/static/mobile/images/z.png"><?php echo $v['votes']; ?></em>
+                    <?php }else{ ?>
+                    <em><img src="<?php echo base_url();?>/static/mobile/images/eye_ico.png"><?php echo $v['views']; ?></em>
+                    <?php } ?>
+                    <em><img src="<?php echo base_url();?>/static/mobile/images/p.png"><?php echo $v['comments']; ?></em>
+                    <i><?php echo $v['add_time'];?></i>
+                </span>
+            </article>
+        </li>
+   <?php endforeach;?>
+
+
+
+
+
+
+
+

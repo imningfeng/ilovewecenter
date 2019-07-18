@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport">
+	<!--<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel="apple-touch-startup-image" href="/startup.png" />
+	<link rel="apple-touch-startup-image" sizes="640x1096" href="/startup_5.png" />-->
+	<meta name="description" content="<?php echo $this->_meta_description; ?>" />
+     <title><?php echo $this->page_title; ?></title>
+	<link href="<?php echo G_STATIC_URL; ?>/css/bootstrap.css" rel="stylesheet" type="text/css" />
+	<link href="<?php echo G_STATIC_URL; ?>/css/icon.css" rel="stylesheet" type="text/css" />
+
+	<?php if (is_array($this->_import_css_files)) { ?>
+	<?php foreach ($this->_import_css_files AS $import_css) { ?>
+	<link href="<?php echo $import_css; ?>?v=<?php echo G_VERSION_BUILD; ?>" rel="stylesheet" type="text/css" />
+	<?php } ?>
+	<?php } ?>
+	<link rel="stylesheet" href="<?php echo base_url();?>/static/mobile/layui/css/layui.css"  media="all">
+	<?php $post_hash_var_name = strtoupper(md5(TIMESTAMP . $this->userinfo['salt'])); ?>
+	<script type="text/javascript">
+        var _<?php echo $post_hash_var_name; ?>="<?php echo new_post_hash(); ?>";
+		var G_POST_HASH=_<?php echo $post_hash_var_name; ?>;
+		var G_INDEX_SCRIPT = "<?php if (get_setting('url_rewrite_enable') != 'Y') echo G_INDEX_SCRIPT; ?>";
+		var G_SITE_NAME = "<?php echo addcslashes(get_setting('site_name'), '\"'); ?>";
+		var G_BASE_URL = "<?php echo base_url(); ?>/<?php echo rtrim(G_INDEX_SCRIPT, '/'); ?>";
+		var G_STATIC_URL = "<?php echo G_STATIC_URL; ?>";
+		var G_UPLOAD_ENABLE = "<?php echo get_setting('upload_enable'); ?>";
+		var G_UPLOAD_URL = "<?php echo get_setting('upload_url'); ?>";
+		var G_USER_ID = "<?php echo $this->user_id; ?>";
+		var G_USER_NAME = "<?php echo addcslashes($this->user_info['user_name'], '\"'); ?>";
+		var G_UNREAD_NOTIFICATION = 0;
+		var G_NOTIFICATION_INTERVAL = <?php echo intval(get_setting('unread_flush_interval')) * 1000; ?>;
+		var G_CAN_CREATE_TOPIC = "<?php echo $this->user_info['permission']['create_topic']; ?>";
+		var G_TIMESTAMP = <?php echo TIMESTAMP; ?>;
+        var G_LOGIN_URL = "<?php echo get_js_url("/account/login/")?>"
+		<?php if (human_valid('question_valid_hour')) { ?>
+		var G_QUICK_PUBLISH_HUMAN_VALID = true;
+		<?php } ?>
+		var G_PER_PAGE = "<?php echo get_setting('contents_per_page'); ?>";
+		var G_INDEX_PER_PAGE = "<?php echo get_setting('index_per_page'); ?>";
+		 var G_PRIVATEKEY = "<?php echo G_PRIVATEKEY; ?>";
+  var G_IV = "<?php echo G_IV; ?>";
+	</script>
+
+	<?php if (is_array($this->_import_js_files)) { ?>
+	<?php foreach ($this->_import_js_files AS $import_js) { ?>
+	<script src="<?php echo $import_js; ?>?v=<?php echo G_VERSION_BUILD; ?>" type="text/javascript"></script>
+	<?php } ?>
+	<?php } ?>
+	<script type="text/javascript" src="<?php echo G_STATIC_URL; ?>/js/slide_captcha/gt.js"></script>
+	<script src="<?php echo G_STATIC_URL; ?>/mobile/layer_mobile/layer.js" type="text/javascript"></script>
+	<script src="<?php echo G_STATIC_URL; ?>/js/crypto-js.js"></script>
+</head>
+<body class="<?php echo $this->body_class; ?>">

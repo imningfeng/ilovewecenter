@@ -1,0 +1,72 @@
+<?php if ($this->answers) { ?>
+
+    <?php foreach ($this->answers AS $answer) { ?>
+        <dl>
+            <dt>
+                <img src="<?php if ($answer['anonymous']) { ?><?php echo G_STATIC_URL; ?>/common/avatar-mid-img.png<?php } else { ?><?php echo get_avatar_url($answer['uid'], 'max'); ?><?php } ?>"/>
+            </dt>
+            <dd>
+                <h3>
+                    <a href="<?php if ($answer['anonymous']) { ?>javascript:;<?php } else { ?>m/people/<?php echo $answer['uid']; ?><?php } ?>"><?php if ($answer['anonymous']) { ?><?php _e('匿名用户'); ?><?php } else { ?><?php echo $answer['user_info']['user_name']; ?><?php } ?></a>
+                    <?php if ($answer['user_info']['verified'] == 'enterprise') { ?>
+                        <img src="<?php echo G_STATIC_URL ?>/mobile/images/v.png">
+                    <?php } ?>
+                </h3>
+                <p>
+                    <?php echo nl2br($answer['answer_content']); ?>
+                    <?php if ($answer['attachs']) { ?>
+                    <div class="aw-upload-img-list">
+                        <?php foreach ($answer['attachs'] AS $attach) { ?>
+                            <?php if ($attach['is_image'] AND !($answer['insert_attach_ids'] AND in_array($attach['id'], $answer['insert_attach_ids']))) { ?>
+                                <a href="<?php echo $attach['attachment']; ?>" target="_blank"
+                                   data-fancybox-group="thumb" rel="lightbox"><img
+                                            src="<?php echo $attach['attachment']; ?>"
+                                            class="img-polaroid"
+                                            alt="<?php echo $attach['attach_name']; ?>"/></a>
+                            <?php } ?>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+                </p>
+                <div class="mod-footer" style="margin-top: 10px">
+                    <div class="meta">
+                                        <span class="operate  <?php if ($answer['agree_status'] == 1) { ?> active<?php } ?>">
+                                            <a class="answer_vote agree"
+                                               <?php if ($this->user_id) { ?>onclick="AWS.User.agree_vote($(this), <?php echo $answer['answer_id']; ?>)"<?php } ?>><i
+                                                        class="icon icon-agree"></i> <b><?php echo $answer['agree_count']; ?></b></a>
+
+                                        </span>
+
+                        <?php if ($this->user_id) { ?>
+                            <span class="operate">
+                                                <a class="aw-add-comment"
+                                                   data-id="<?php echo $answer['answer_id']; ?>"
+                                                   data-type="answer" <?php if ($this->question_info['lock'] OR !$this->user_info['permission']['publish_comment']) { ?> data-close="true"<?php } ?>><i
+                                                            class="icon icon-comment"></i> <font id="count_comment<?php echo $answer['answer_id']; ?>"><?php echo $answer['comment_count']; ?></font></a>
+                                            </span>
+                            <span class="operate <?php if ($answer["user_favorited"]) { ?>active<?php } ?>">
+                                                <a onclick="AWS.User.favorite('answer', <?php echo $answer['answer_id']; ?>,this)"><i
+                                                            class="icon icon-favor"></i></a>
+                                            </span>
+                        <?php } ?>
+
+                        <?php if (($this->user_info['permission']['is_administortar'] OR $this->user_info['permission']['is_moderator']) OR ($answer['uid'] == $this->user_id AND ((TIMESTAMP - $answer['add_time']) < (get_setting('answer_edit_time') * 60) OR (!get_setting('answer_edit_time'))))) { ?>
+                            <span class="operate">
+                                <a class="text-color-999" href="javascript:;"
+                                   onclick="openEdit({answer_id:<?php echo $answer['answer_id']; ?>,attach_access_key:'<?php echo $this->attach_access_key; ?>'});"><i
+                                        class="icon icon-edit"></i></a>
+                            </span>
+                        <?php } ?>
+                    </div>
+                </div>
+            </dd>
+            <div class="clear"></div>
+        </dl>
+    <?php } ?>
+
+    <?php if(count($this->answers)>=10){?>
+        <a class="aw-load-more" onclick="loadAnswer('<?php echo $this->type ?>',<?php echo $this->page ?>,this)"><i
+                    class="icon icon-loading icon-spin"></i> <span>更多</span></a>
+    <?php }?>
+<?php } ?>
+

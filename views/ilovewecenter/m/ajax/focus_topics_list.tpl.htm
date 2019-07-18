@@ -1,0 +1,17 @@
+    <div class="follow">
+        <?php foreach ($this->topics_list AS $key => $v1) { ?>
+
+            <dl>
+                <dt><img src="<?php echo get_topic_pic_url('max', $v1['topic_pic']); ?>"></dt>
+                <a href="topic/<?php echo $v1['url_token']; ?>">
+                    <dd class="d_center">
+                    <h4><?php echo $v1['topic_title']; ?></h4>
+                    <p><span><?php echo $v1['focus_count']; ?>人关注</span></p>
+                    </dd>
+                </a>
+                <dd class="d_right"><a type="off" class="active">√ 已关注</a></dd>
+                <div class="clear"></div>
+            </dl>
+
+        <?php } ?>
+    </div>

@@ -1,0 +1,85 @@
+<?php TPL::output('m/header.tpl.htm'); ?>
+<form action="<?php echo get_js_url('/question/ajax/update_answer/answer_id-'.$_GET['id']); ?>" onsubmit="return false;" method="post" id="answer_edit">
+    <input type="hidden" name="attach_access_key" value="<?php echo $_GET['attach_access_key']; ?>"/>
+    <div id="answer_content"></div>
+    <input type="file" id="inputFile" style="display: none;">
+    <textarea name="answer_content" style="display: none"><?php echo $this->answer_info['answer_content']; ?></textarea>
+    <div style="text-align: right;padding: 5px;">
+        <span><input id="aw-do-delete" type="checkbox" value="1" name="do_delete" /><label for="aw-do-delete"><?php _e('删除回复'); ?></label></span>
+        <button class="btn btn-large btn-success" onclick="fabu()"><?php _e('确定'); ?></button>
+    </div>
+</form>
+</body>
+<script src="<?php echo G_STATIC_URL; ?>/mobile/js/zx-editor.min.js"></script>
+<script src="<?php echo G_STATIC_URL; ?>/mobile/js/zx-editor.min.js"></script>
+<script>
+    var PUBLISH_TYPE = 'answer';
+    var zxEditor = new ZxEditor('#answer_content', {
+        // 顶部偏移距离
+        // demo有顶部导航栏，高度44
+        top: 44,
+        // 编辑框左右边距
+        padding: 0,
+        bottom:10
+    });
+    $('.zxeditor-content-wrapper').css('margin-bottom',0)
+    $('.zxeditor-content-wrapper').css('background','white')
+    $('.zxeditor-content-wrapper').css('overflow-y','scroll')
+    $('.zxeditor-content-wrapper').css('border','0.5px solid #eee')
+
+    var $inputFile = document.querySelector('#inputFile')
+    zxEditor.on('select-picture', function () {
+        // 触发input点击事件
+        $inputFile.click();
+    })
+    var answer_content = $('textarea[name=answer_content]').val()
+    zxEditor.setContent(answer_content)
+    $inputFile.addEventListener('change', function (e) {
+        var files = e.target.files; // 或者 $inputFile.files
+        var file = files[0]
+        // 上传文件至服务器
+        upload({
+            // 接收上传文件的服务器url
+            url: '<?php echo get_js_url('/publish/ajax/attach_upload/id-answer__attach_access_key-'.$_GET['attach_access_key']); ?>&aws_upload_file='+file.name+'&timestamp='+(new Date()).getTime(),
+            file: file,
+            success: function (res) {
+                try {
+                    // 服务器返回的json字符串
+                    res = JSON.parse(res)
+                    if (!res.error) {
+                        // 添加图片至编辑器内
+                        zxEditor.addImage(res.thumb.replace('90x90_',''))
+                        $('#inputFile').val('')
+                    } else {
+                        layer.open({
+                            content: res.error
+                            ,skin: 'msg',time: 2
+                        });
+                        $('#inputFile').val('')
+                    }
+                } catch (e) {}
+            },
+            error: function (err) {
+                layer.open({
+                    content: '文件上传失败'
+                    ,skin: 'msg',time: 2
+                });
+                $('#inputFile').val('')
+            }
+        })
+    })
+    function fabu(){
+        var html = zxEditor.getContent()
+        var txt = zxEditor.removeHtmlTags(html).replace(/&nbsp;/g,'')
+        if(!txt.trim()){
+            layer.open({
+                content: '请输入内容'
+                ,skin: 'msg',time: 2
+            });
+            return false
+        }
+        $('textarea[name=answer_content]').val(html)
+        AWS.ajax_post($('#answer_edit'), AWS.ajax_processer,'edit_answer');
+        location.href = G_BASE_URL+'/m/question/<?php echo $_GET['question_id']; ?>';
+    }
+</script>

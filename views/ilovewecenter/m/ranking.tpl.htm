@@ -1,0 +1,96 @@
+<?php TPL::output('m/header_meta.tpl.htm'); ?>
+<style type="text/css">
+    .gztj_tab ul li{ height:44px; line-height:44px; width:33%; text-align:center; float:left;}
+</style>
+<!--关注推荐-->
+<div class="gztj_tab phb_tab border_top">
+	<ul>
+    	<li class="cur type" data-hide="bonuspoints"><a href="#">积分榜</a></li>
+        <li class="type" data-hide="comment"><a href="#">评论榜</a></li>
+        <li class="type" data-hide="thumbup"><a href="#">点赞榜</a></li>
+    </ul>
+</div>
+<!--关注推荐end-->
+
+<!--tab-->
+<div class="phb_two">
+	<a class="b cur" data-hide="snum" href="#">总榜</a>
+    <a class="b" data-hide="week" href="#">上升最快榜</a>
+</div>
+<!--tab end-->
+
+<!--推荐列表-->
+<div class="tj_list">
+	  <ul id="tj_lists">
+    </ul>
+    <div class="load_more" id="load_explore" data-type="<?php echo $this->type; ?>" data-check="1" data-page="0" data-b="<?php echo $this->b; ?>"  ><a href="#"><img src="<?php echo G_STATIC_URL; ?>/mobile/images/loading.gif"></a></div>
+    <!-- <div class="mod-footer" style="display:none;">
+        <a id="load_explore" class="aw-load-more" auto-load="false"><i class="icon icon-loading icon-spin"></i> <span><?php _e('更多'); ?></span></a>
+    </div> -->
+</div>
+
+<div style="height:70px;"></div>
+
+<script type="text/javascript">
+      $(function(){
+            var tabs = $(".type"),tab = $(".b"),data = new Object();
+
+            AWS.load_indexs_view(G_BASE_URL + '/m/ajax/ranking/',data,$("#load_explore"),$("#tj_lists"),$("#load_explore").attr('data-page'));
+             
+            tabs.each(function(i){
+                $(this).click(function(i){
+
+                      $("li.type").removeClass("cur");
+                      $(this).addClass('cur');
+                      if($("#load_explore").attr('data-type') != $(this).attr('data-hide')){
+                            $("a.b").removeClass("cur");
+                            $(".phb_two a:first").addClass("cur");
+                            $("#load_explore").show();
+                            $("#load_explore").attr('data-check',1)
+                            page = 0;
+                            $("#load_explore").attr('data-type',$(this).attr('data-hide'));
+                            $("#load_explore").attr('data-b',$(".phb_two a:first").attr('data-hide'));
+                            $("#load_explore").attr('data-page',page);
+                            $("#tj_lists").children().remove();
+                            AWS.load_indexs_view(G_BASE_URL + '/m/ajax/ranking/',{},$("#load_explore"),$("#tj_lists"),$("#load_explore").attr('data-page'));
+                      }
+                })
+            })
+
+            tab.each(function(i){
+                $(this).click(function(i){
+                      $("a.b").removeClass("cur");
+                      $(this).addClass('cur');
+                      if($("#load_explore").attr('data-b') != $(this).attr('data-hide')){
+                            $("#load_explore").show();
+                            $("#load_explore").attr('data-check',1)
+                            page = 0;
+                            $("#load_explore").attr('data-page',page);
+                            $("#load_explore").attr('data-b',$(this).attr('data-hide'));
+                            $("#tj_lists").children().remove();
+                            AWS.load_indexs_view(G_BASE_URL + '/m/ajax/ranking/',{},$("#load_explore"),$("#tj_lists"),$("#load_explore").attr('data-page'));
+                      }
+                      
+                })
+            })
+
+            
+
+            $(window).bind('scroll',function(){
+                if($(document).scrollTop()==document.body.clientHeight-$(window).height()){
+                    if($("#load_explore").attr('data-check') == 1)
+                    {  
+                       $("#load_explore").show();
+                       AWS.load_indexs_view(G_BASE_URL + '/m/ajax/ranking/',{},$("#load_explore"),$("#tj_lists"),$("#load_explore").attr('data-page'));
+                    }
+                       
+                }
+            });
+
+            
+      })
+
+
+</script>
+<!--推荐列表end-->
+<?php TPL::output('m/footer.tpl.htm'); ?>

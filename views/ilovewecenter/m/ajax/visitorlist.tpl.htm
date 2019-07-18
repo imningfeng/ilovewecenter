@@ -1,0 +1,22 @@
+<?php if (is_array($this->list)) { ?>
+<?php foreach ($this->list AS $key => $val) { ?>
+<li>
+    <p><i></i><?php $key; echo $key; ?></p>
+
+    <?php foreach($val AS $k => $v) { ?>
+    <dl>
+        <dt>
+        <?php if($v['vuid']){ ?>
+        <a href="m/people/<?php echo $v['username'];?>" data-uid="<?php echo $v['vuid']; ?>">
+        <?php if ($val['verified']) { ?><img src="<?php echo G_STATIC_URL; ?>/images/v.png"><?php } ?>
+        <?php } ?>
+        <img src="<?php echo get_avatar_url($v['vuid'], 'max'); ?>"></a></dt>
+        <dd>
+        <a href="m/people/<?php echo $v['username'];?>"><?php echo $v['username']; ?></a>
+        <span><?php echo $v['job_name']['job_name']; ?></span>
+        </dd>
+    </dl>
+    <?php } ?>
+</li>
+<?php } ?>
+<?php } ?>

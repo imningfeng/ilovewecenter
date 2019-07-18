@@ -1,0 +1,63 @@
+<dl>
+    <dt>
+        <a href="<?php if ($this->answer_info['anonymous']) { ?>javascript:;<?php } else { ?>m/people/<?php echo $this->answer_info['uid']; ?><?php } ?>">
+        <img src="<?php if ($this->answer_info['anonymous']) { ?><?php echo G_STATIC_URL; ?>/common/avatar-mid-img.png<?php } else { ?><?php echo get_avatar_url($this->answer_info['uid'], 'max'); ?><?php } ?>"/>
+        </a>
+    </dt>
+    <dd>
+        <h3>
+            <a href="<?php if ($this->answer_info['anonymous']) { ?>javascript:;<?php } else { ?>m/people/<?php echo $this->answer_info['uid']; ?><?php } ?>"><?php if ($this->answer_info['anonymous']) { ?><?php _e('匿名用户'); ?><?php } else { ?><?php echo $this->answer_info['user_info']['user_name']; ?><?php } ?></a>
+            <?php if ($this->answer_info['user_info']['verified'] == 'enterprise') { ?>
+                <img src="<?php echo G_STATIC_URL ?>/mobile/images/v.png">
+            <?php } ?>
+        </h3>
+        <p>
+            <?php echo nl2br($this->answer_info['answer_content']); ?>
+            <?php if ($this->answer_info['attachs']) { ?>
+        <div class="aw-upload-img-list">
+            <?php foreach ($this->answer_info['attachs'] AS $attach) { ?>
+                <?php if ($attach['is_image'] AND !($this->answer_info['insert_attach_ids'] AND in_array($attach['id'], $this->answer_info['insert_attach_ids']))) { ?>
+                    <a href="<?php echo $attach['attachment']; ?>" target="_blank"
+                       data-fancybox-group="thumb" rel="lightbox"><img
+                                src="<?php echo $attach['attachment']; ?>"
+                                class="img-polaroid"
+                                alt="<?php echo $attach['attach_name']; ?>"/></a>
+                <?php } ?>
+            <?php } ?>
+        </div>
+        <?php } ?>
+        </p>
+        <div class="mod-footer" style="margin-top: 10px">
+            <div class="meta">
+                                        <span class="operate  <?php if ($this->answer_info['agree_status'] == 1) { ?> active<?php } ?>">
+                                            <a class="answer_vote agree"
+                                               <?php if ($this->user_id) { ?>onclick="AWS.User.agree_vote($(this), <?php echo $this->answer_info['answer_id']; ?>)"<?php } ?>><i
+                                                        class="icon icon-agree"></i> <b><?php echo $this->answer_info['agree_count']; ?></b></a>
+
+                                        </span>
+
+                <?php if ($this->user_id) { ?>
+                    <span class="operate">
+                                                <a class="aw-add-comment"
+                                                   data-id="<?php echo $this->answer_info['answer_id']; ?>"
+                                                   data-type="answer" <?php if ($this->question_info['lock'] OR !$this->user_info['permission']['publish_comment']) { ?> data-close="true"<?php } ?>><i
+                                                            class="icon icon-comment"></i> <?php echo $this->answer_info['comment_count']; ?></a>
+                                            </span>
+                    <span class="operate <?php if ($this->answer_info["user_favorited"]) { ?>active<?php } ?>">
+                                                <a onclick="AWS.User.favorite('answer', <?php echo $this->answer_info['answer_id']; ?>,this)"><i
+                                                            class="icon icon-favor"></i></a>
+                                            </span>
+                <?php } ?>
+
+                <?php if (($this->user_info['permission']['is_administortar'] OR $this->user_info['permission']['is_moderator']) OR ($this->answer_info['uid'] == $this->user_id AND ((TIMESTAMP - $this->answer_info['add_time']) < (get_setting('answer_edit_time') * 60) OR (!get_setting('answer_edit_time'))))) { ?>
+                    <span class="operate">
+                                        <a class="text-color-999" href="javascript:;"
+                                           onclick="openEdit({answer_id:<?php echo $this->answer_info['answer_id']; ?>,attach_access_key:'<?php echo $this->attach_access_key; ?>'});"><i
+                                                    class="icon icon-edit"></i></a>
+                                    </span>
+                <?php } ?>
+            </div>
+        </div>
+    </dd>
+    <div class="clear"></div>
+</dl>

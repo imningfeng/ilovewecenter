@@ -1,0 +1,31 @@
+<div class="aw-feed-list aw-topic-list active">
+				<div class="mod-body">
+					<ul id="hot_topics_list">
+<?php foreach ($this->hot_topics_list AS $key => $val) { ?>
+<li>
+	<div class="mod-head clearfix">
+		<a href="m/topic/<?php echo $val['topic_id']; ?>"  class="img">
+			<img src="<?php echo get_topic_pic_url('mid', $val['topic_pic']); ?>" alt="" width="50" />
+		</a>
+		<div class="content">
+			<span class="topic-tag clearfix">
+				<a href="m/topic/<?php echo $val['topic_id']; ?>" class="text"><?php echo $val['topic_title']; ?></a>
+			</span>
+			<p class="color-999">
+				<?php echo cjk_substr($val['topic_description'], 0, 32, 'UTF-8', '...'); ?>
+			</p>
+		</div>
+	</div>
+	<div class="mod-footer active">
+		<a><?php _e('%s 个讨论', $val['discuss_count']); ?></a>
+		<span class="pull-left"> • </span>
+		<a><?php _e('%s 个关注', $val['focus_count']); ?></a>
+	</div>
+</li>
+<?php } ?>
+  				 </ul>
+				</div>
+			<div class="mod-footer">
+		<a class="aw-load-more" id="load_search_topics" data-page="<?php echo $this->page?>"><i class="icon icon-loading icon-spin"></i> <span>更多</span></a>
+	</div>
+</div>

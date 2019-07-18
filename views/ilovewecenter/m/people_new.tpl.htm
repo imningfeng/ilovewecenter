@@ -1,0 +1,407 @@
+<?php TPL::output('m/header_meta.tpl.htm'); ?>
+<!--头像信息-->
+<div class="head_bg">
+    <a class="set_up" href="m/settings/"><img src="<?php echo G_STATIC_URL; ?>/mobile/images/set_up.png"></a>
+    <a class="sign_out" href="account/logout/"><img src="<?php echo G_STATIC_URL; ?>/mobile/images/tc_ico.png"></a>
+    <div class="head_box">
+        <div class="tx_mes">
+            <dl>
+                <dt><img style="border-radius: 50%;" id="avatar_src" src="<?php echo get_avatar_url($this->user['uid'], 'max'); ?>?rand=<?php echo rand(1, 999); ?>">
+                    <?php if ($this->user['uid'] == $this->user_id) { ?>
+                        <a id="avatar_uploader" href="javascript:;"></a>
+                    <?php } ?>
+                </dt>
+                <dd>
+                    <h4><?php echo $this->user['user_name']; ?>
+                        <?php if ($this->user['verified']) { ?>
+                            <i class="icon-v<?php if ($this->user['verified'] == 'enterprise') { ?> i-ve<?php } ?>"
+                               title="<?php if ($this->user['verified'] == 'enterprise') { ?>企业认证<?php } else { ?>个人认证<?php } ?>">
+                            </i>
+                        <?php } ?>
+                    </h4>
+                    <p>
+                    <!-- <span>
+                    <?php _e('最近访客'); ?>（<a class="blue"
+                                            href="m/visitor/uid-<?php echo $this->user['uid']; ?>"><?php echo $this->user_visitor_num['num']; ?></a>）
+                    </span> -->
+                        <?php if ($this->user['uid'] == $this->user_id) { ?>
+                            <span>
+                    <?php _e('消息') ?>（<a class="red"
+                                         href="m/inbox/" style="margin-right: 0px;"><?php echo $this->user_info['inbox_unread'] + $this->user_info['notification_unread'] ?></a>）
+                    </span>
+                        <?php } ?>
+
+                        <?php if ($this->user['uid'] != $this->user_id AND $this->user_id) { ?>
+
+                             <a class="mail" href="m/inbox_new/uid-<?php echo $this->user['uid']; ?>"
+                               style="background-color:#f9d11a; display: inline-block; padding: 2px 5px; border-radius: 3px;">
+                                <img style=" width: 18px;" src="<?php echo G_STATIC_URL; ?>/mobile/images/mail.png"/>
+                            </a>
+                            <a class="qxgz <?php if ($this->user_follow_check) { ?> active<?php } ?>"
+                               onclick="AWS.User.follow($(this),'user', <?php echo $this->user['uid']; ?>,'<?php echo new_post_hash();?>');"><?php if ($this->user_follow_check) { ?><?php _e('取消关注'); ?><?php } else { ?><?php _e('关注'); ?><?php } ?></a>
+                            <?php if ($this->user_gag['permission']['edit_gag'] == 1) { ?>
+                                <a class="<?php if ($this->user_is_gag) { ?> active<?php } ?>"
+                                   data-types="<?php echo $this->user_is_gag; ?>"
+                                   data-status="<?php if ($this->user_is_gag) { ?><?php echo 'add'; ?><?php } else { ?><?php echo 'del'; ?><?php } ?>"
+                                   href="#"
+                                   onclick="edit_gag($(this),'add', <?php echo $this->user['uid']; ?>);"><?php if ($this->user_is_gag) { ?><?php _e('禁言'); ?><?php } else { ?><?php _e('已禁言'); ?><?php } ?></a>
+                            <?php } ?>
+
+
+                           
+
+                        <?php } ?>
+                    </p>
+                </dd>
+            </dl>
+        </div>
+        <div class="three_type">
+            <dl>
+                <dt><?php echo $this->user['reputation']; ?></dt>
+                <dd><?php _e('威望') ?></dd>
+            </dl>
+            <dl>
+                <dt><?php echo $this->user['integral']; ?></dt>
+                <dd><?php _e('积分') ?></dd>
+            </dl>
+            <dl>
+                <dt><?php echo $this->user['agree_count']; ?></dt>
+                <dd><?php _e('获赞') ?></dd>
+            </dl>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<!--头像信息end-->
+
+
+<!--评论收藏-->
+<div class="five_t">
+    <ul>
+        <li class="cur"><a href="#join" role="tab" data-toggle="tab"><?php _e('参与'); ?>
+                <i><?php echo $this->user_actions_answers_count; ?></i></a></li>
+        <li><a href="#publish" role="tab" data-toggle="tab"><?php _e('发起'); ?>
+                <i><?php echo $this->user_actions_questions_count; ?></i></a></li>
+        <li><a href="#articles" role="tab" data-toggle="tab"><?php _e('文章'); ?>
+                <i><?php echo $this->user_actions_articles_count; ?></i></a></li>
+        <li><a href="#follow" role="tab" data-toggle="tab"><?php _e('关注'); ?></a></li>
+        <li><a href="#profile" role="tab" data-toggle="tab"><?php _e('资料'); ?></a></li>
+        <?php if ($this->user['uid'] == $this->user_id AND $this->user_id): ?>
+            <li><a href="#favorite" role="tab" data-toggle="tab"><?php _e('收藏'); ?></a></li>
+        <?php endif; ?>
+    </ul>
+</div>
+<!--评论收藏end-->
+
+
+<div class="aw-box" style="padding-bottom: 60px;">
+    <div class="tab-content">
+        <!-- 参与列表 -->
+
+        <div class="tab-pane active" id="join">
+            <div class="aw-feed-list active">
+                <?php if ($this->user_actions_answers): ?>
+
+                    <div class="post" id="join_listview">
+                        <?php foreach ($this->user_actions_answers AS $key => $val) { ?>
+                            <dl>
+                                <dt>
+                                    <a onclick="AWS.DingTalk.open('<?php echo $val["link"] ?>')"><?php echo cjk_substr($val['title'],0, 30, 'UTF-8','....'); ?></a>
+                                    <div class="post_box">
+                                        <div class="post_jj">
+                                            <p style="word-wrap:break-word;word-break:break-all;">
+                                           <?php echo chinese_msubstr(html_entity_decode(cjk_substr(trim(strip_tags(FORMAT::parse_attachs(FORMAT::parse_bbcode($val['answer_info']['answer_content'])))),0, 150, 'UTF-8','....')),0,150); ?>
+                                            </p>
+                                            
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                </dt>
+                                <dd>
+                                    <span><a href="people/<?php echo $val['user_info']['user_name']; ?>"><img
+                                                    src="<?php echo get_avatar_url($val['uid'], 'max'); ?>"></a>
+                                    <a href="people/<?php echo $val['user_info']['user_name']; ?>">
+                                    <?php echo $val['user_info']['user_name']; ?>
+                                    </a>
+                                    </span>
+                                    <label><img src="<?php echo G_STATIC_URL; ?>/mobile/images/comment.png">
+                                        <?php echo $val['answer_info']['agree_count']; ?>
+                                    </label>
+                                    <label><img src="<?php echo G_STATIC_URL; ?>/mobile/images/zan_ico2.png"><?php echo $val['answer_info']['comment_count']; ?>
+                                    </label>
+                                </dd>
+
+                            </dl>
+                        <?php } ?>
+                    </div>
+                <?php else: ?>
+                    <div class="mod-body">
+                        <ul id="best_answers_listview"><p style="padding: 15px 0" align="center">没有内容</p></ul>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($this->user_actions_answers_count > 10): ?>
+                    <div class="mod-footer">
+                        <a class="aw-load-more" id="load_join" auto-load="false"><i
+                                    class="icon icon-loading icon-spin"></i> <span><?php _e('更多'); ?></span></a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        <!-- end 参与列表 -->
+
+        <!-- 发起列表 -->
+
+        <div class="tab-pane" id="publish">
+            <div class="aw-feed-list active">
+                <?php if ($this->user_actions_questions): ?>
+
+                    <div class="post" id="publish_listview">
+                        <?php foreach ($this->user_actions_questions AS $key => $val) { ?>
+                            <dl>
+                                <dt>
+                                    <a onclick="AWS.DingTalk.open('<?php echo $val["link"] ?>')"><?php echo cjk_substr($val['title'],0, 30, 'UTF-8','....'); ?></a>
+                                </dt>
+                                <dd>
+                                    <span><a href="people/<?php echo $val['user_info']['user_name']; ?>"><img
+                                                    src="<?php echo get_avatar_url($val['uid'], 'max'); ?>"></a>
+                                    <a href="people/<?php echo $val['user_info']['user_name']; ?>">
+                                    <?php echo $val['user_info']['user_name']; ?>
+                                    </a>
+                                    </span>
+                                    <label><img src="<?php echo G_STATIC_URL; ?>/mobile/images/comment.png">
+                                        <?php echo $val['question_info']['focus_count']; ?>
+                                    </label>
+                                    <label><img src="<?php echo G_STATIC_URL; ?>/mobile/images/zan_ico2.png"><?php echo $val['question_info']['comment_count']; ?>
+                                    </label>
+                                </dd>
+                            </dl>
+                        <?php } ?>
+                    </div>
+                <?php else: ?>
+                    <div class="mod-body">
+                        <ul id="best_answers_listview"><p style="padding: 15px 0" align="center">没有内容</p></ul>
+                    </div>
+                <?php endif; ?>
+                <?php if ($this->user_actions_questions_count > 10): ?>
+                    <div class="mod-footer">
+                        <a class="aw-load-more" id="load_publish" auto-load="false"><i
+                                    class="icon icon-loading icon-spin"></i> <span><?php _e('更多'); ?></span></a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- end 发起列表 -->
+        
+        <!-- 文章列表 -->
+
+        <div class="tab-pane" id="articles">
+            <div class="aw-feed-list active">
+                <div class="post" id="contents_user_actions_articles"></div>
+                <div class="mod-footer">
+                    <!-- 加载更多内容 -->
+                    <a class="aw-load-more" id="bp_user_actions_articles_more">
+                        <i class="icon icon-loading icon-spin"></i>
+                        <span><?php _e('更多'); ?></span>
+                    </a>
+                    <!-- end 加载更多内容 -->
+                </div>
+            </div>
+        </div>
+        <!-- end 文章列表 -->
+
+        <!-- 关注列表 -->
+        <div class="tab-pane" id="follow">
+            <!-- 关注 -->
+            <?php if ($this->friends_list) { ?>
+                <div class="mod card-mod">
+                    <div class="mod-head">
+                        <h2><?php _e('关注 %s 人', $this->user['friend_count']); ?></h2>
+                    </div>
+                    <div class="mod-body">
+                        <ul class="user-list">
+                            <?php foreach ($this->friends_list AS $key => $val) { ?>
+                                <li>
+                                    <a href="m/people/<?php echo $val['url_token']; ?>"><img class="img" width="25"
+                                                                                             src="<?php echo get_avatar_url($val['uid'], 'max'); ?>"
+                                                                                             alt="<?php echo $val['user_name']; ?>"/></a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                </div>
+            <?php } else { ?>
+                <div class="mod-body">
+                    <ul id="best_answers_listview"><p style="padding: 15px 0" align="center">没有内容</p></ul>
+                </div>
+            <?php } ?>
+
+            <!-- end 关注 -->
+
+            <!-- 关注者 -->
+            <?php if ($this->fans_list) { ?>
+                <div class="mod card-mod">
+                    <div class="mod-head">
+                        <h2><?php _e('粉丝 %s 人', $this->user['fans_count']); ?></h2>
+                    </div>
+                    <div class="mod-body">
+                        <ul class="user-list">
+                            <?php foreach ($this->fans_list AS $key => $val) { ?>
+                                <li>
+                                    <a href="people/<?php echo $val['url_token']; ?>"><img class="img" width="25"
+                                                                                           src="<?php echo get_avatar_url($val['uid'], 'max'); ?>"
+                                                                                           alt="<?php echo $val['user_name']; ?>"></a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                </div>
+            <?php } ?>
+            <!-- end 关注者 -->
+
+            <!-- 关注话题 -->
+            <?php if ($this->focus_topics) { ?>
+                <div class="mod card-mod focus-topics">
+                    <div class="mod-head">
+                        <h2><?php _e('关注 %s 个话题', $this->user['topic_focus_count']); ?></h2>
+                    </div>
+                    <div class="mod-body clearfix">
+                        <?php foreach ($this->focus_topics AS $key => $val) { ?>
+                            <span class="topic-tag">
+                            <a class="text"
+                               href="m/topic/<?php echo $val['url_token']; ?>"><?php echo $val['topic_title']; ?></a>
+                        </span>
+                        <?php } ?>
+                    </div>
+                </div>
+            <?php } ?>
+            <!-- end 关注话题 -->
+        </div>
+        <!-- end 关注列表 -->
+
+        <!-- 个人资料 -->
+        <div class="tab-pane" id="profile">
+            <div class="mod card-mod people-profile">
+                <div class="mod-head">
+                    <h2><?php _e('个人资料'); ?></h2>
+                </div>
+                <div class="mod-body">
+                    <ul>
+                        <li>
+                            <i class="icon icon-location"></i>
+                            <span class="color-666"> <?php _e('现居'); ?> :</span>
+                            <?php if ($this->user['province']) { ?>
+                                <?php echo $this->user['province']; ?>
+                                <?php echo $this->user['city']; ?>
+                            <?php } ?>
+                        </li>
+                        <li>
+                            <i class="icon icon-job"></i>
+                            <span class="color-666"> <?php _e('职业'); ?>
+                                :</span> <?php if ($this->job_name) { ?><?php echo $this->job_name; ?><?php } ?>
+                        </li>
+                        <li>
+                            <i class="icon icon-bind"></i>
+                            <span class="color-666"><?php _e('绑定'); ?> :</span>
+                            <?php if (get_setting('sina_weibo_enabled') == 'Y' AND $this->sina_weibo_url) { ?>
+                                <?php if ($this->sina_weibo_url AND get_setting('sina_weibo_enabled') == 'Y') { ?><a
+                                    href="<?php if ($this->sina_weibo_url) { ?><?php echo $this->sina_weibo_url; ?><?php } else { ?>javascript:;<?php } ?>"
+                                    title="<?php _e('微博'); ?>"><?php _e('微博'); ?></a><?php } ?>
+                            <?php } ?>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- end 个人资料 -->
+
+        <div class="tab-pane" id="favorite">
+            <div class="mod card-mod people-favorite">
+                <div class="aw-feed-list active">
+                    <div class="mod-body">
+                        <ul id="favorite_listview">
+                        </ul>
+                    </div>
+                    <div class="mod-footer">
+                        <a id="load_favorite" class="aw-load-more"><i class="icon icon-loading icon-spin"></i>
+                            <span><?php _e('更多'); ?></span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--推荐列表end-->
+
+<script type="text/javascript">
+    $(function () {
+        var tabs = $(".five_t ul").children('li');
+        tabs.each(function (i) {
+            $(this).click(function () {
+                $(this).siblings().removeClass('cur');
+                $(this).addClass('cur');
+            })
+        })
+    })
+    $(document).ready(function () {
+        
+        
+        var PEOPLE_USER_ID = '<?php echo $this->user['uid']; ?>';
+
+        var ACTIVITY_ACTIONS = '<?php echo implode(',', array(
+            ACTION_LOG::ADD_QUESTION,
+            ACTION_LOG::ANSWER_QUESTION,
+            ACTION_LOG::ADD_REQUESTION_FOCUS,
+            ACTION_LOG::ADD_AGREE,
+            ACTION_LOG::ADD_TOPIC,
+            ACTION_LOG::ADD_TOPIC_FOCUS,
+            ACTION_LOG::ADD_ARTICLE,
+            ACTION_LOG::ADD_AGREE_ARTICLE,
+            ACTION_LOG::ADD_COMMENT_ARTICLE
+        )); ?>';
+        
+              var fileUpload = new FileUpload('avatar', $('#avatar_uploader'), $('#avatar_src'), G_BASE_URL + '/account/ajax/avatar_upload/', {'loading_status': '#avatar_uploading_status'});
+        
+
+        AWS.load_list_view(G_BASE_URL + '/people/ajax/user_actions/uid' + '-' + PEOPLE_USER_ID + '__actions-201', $('#load_join'), $('#join_listview'), 1); // 参与的问题
+
+        AWS.load_list_view(G_BASE_URL + '/people/ajax/user_actions/uid' + '-' + PEOPLE_USER_ID + '__actions-101', $('#load_publish'), $('#publish_listview'), 1);   // 发起的问题
+        AWS.load_list_view(G_BASE_URL + '/people/ajax/user_actions/uid'+ '-' + PEOPLE_USER_ID + '__actions-501', $('#bp_user_actions_articles_more'), $('#contents_user_actions_articles'));    // 发起的文章
+        AWS.load_list_view(G_BASE_URL + '/m/ajax/favorite_list/', $('#load_favorite'), $('#favorite_listview'));
+    });
+
+    function edit_gag(selector, type, data_id) {
+
+        if (selector.attr('data-types') == 1) {
+            AWS.DingTalk.choose([{
+                key: '禁言1小时', //显示文本
+                value: 'hour' //值，
+            }, {
+                key: '禁言1天',
+                value: 'day'
+            }, {
+                key: '禁言1周',
+                value: 'week'
+            }, {
+                key: '禁言1月',
+                value: 'month'
+            }, {
+                key: '禁言1年',
+                value: 'year'
+            }, {
+                key: '永久禁言',
+                value: 'forever'
+            }], "禁言1天", function (result) {
+                AWS.edit_publish(selector, type, data_id, selector.attr('data-status'), result.value);
+            });
+        } else if (selector.attr('data-types') == 0) {
+            AWS.edit_publish(selector, 'del', data_id, selector.attr('data-status'));
+        }
+
+    }
+
+</script>
+
+<?php TPL::output('m/footer.tpl.htm'); ?>

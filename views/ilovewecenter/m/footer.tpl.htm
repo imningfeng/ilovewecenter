@@ -1,0 +1,100 @@
+
+
+<!-- DO NOT REMOVE -->
+<div id="aw-ajax-box" class="aw-ajax-box" style="height:60px;"></div>
+
+<!-- nav -->
+<div class="nav">
+	<ul>
+		<li>
+			<a href="m/" <?php if ($_GET['act'] == 'index') { ?>class="active"<?php } ?>><i class="icon xfind"></i><?php _e('发现'); ?></a>
+		</li>
+
+		<li>
+			<a href="m/topic/" <?php if ($_GET['act'] == 'topic') { ?>class="active"<?php } ?>><i class="icon theme"></i><?php _e('话题'); ?></a>
+		</li>
+
+		<li>
+			<a href="people/<?php echo $this->user_info['url_token']; ?>" class="user <?php if ($_GET['act'] == 'people') { ?>active<?php }?>"><span class="triangle"></span><i class="icon my"></i>
+			<?php _e('我'); ?>
+			<?php if ($this->user_info['inbox_unread'] != 0 || $this->user_info['notification_unread']) { ?>
+			<i class="icon-tips"></i>
+			<?php } ?>
+			</a>
+		</li>
+
+	</ul>
+	<!-- <div class="aw-popover user active">
+		<ul>
+			<?php if ($this->user_id) { ?>
+			<li>
+				<a href="people/<?php echo $this->user_info['uid']; ?>">
+					<span class="label">
+						<img class="img" alt="<?php echo $this->user_info['user_name']; ?>" src="<?php echo get_avatar_url($this->user_info['uid'], 'max'); ?>" />
+					</span>
+					<?php echo $this->user_info['user_name']; ?>
+				</a>
+			</li>
+			<li>
+				<a href="m/inbox/">
+					<span class="label">
+						<i class="icon icon-inbox"></i>
+					</span>
+					<?php _e('消息'); ?>
+					<?php if ($this->user_info['inbox_unread'] != 0 || $this->user_info['notification_unread']) {?>
+						<span class="badge badge-danger"><?php echo $this->user_info['inbox_unread']+$this->user_info['notification_unread']?></span>
+					<?php } ?>
+				</a>
+			</li>
+			<li>
+				<a href="m/settings/">
+					<span class="label">
+						<i class="icon icon-setting"></i>
+					</span>
+					<?php _e('设置'); ?>
+				</a>
+			</li>
+			<li>
+				<a href="account/logout/">
+					<span class="label">
+						<i class="icon icon-logout"></i>
+					</span>
+					<?php _e('退出'); ?>
+				</a>
+			</li>
+			<?php } else { ?>
+			<li>
+				<a href="m/login/">
+					<span class="label">
+						<i class="icon icon-login"></i>
+					</span>
+					<?php _e('登录'); ?>
+				</a>
+			</li>
+			<?php if (get_setting('register_type') == 'open') { ?>
+			<li>
+				<a href="m/register/">
+					<span class="label">
+						<i class="icon icon-signup"></i>
+					</span>
+					<?php _e(   '注册'); ?>
+				</a>
+			</li>
+			<?php } ?>
+			<?php } ?>
+		</ul>
+	</div> -->
+</div>
+<!-- end nav -->
+
+<div style="display:none">
+	<?php echo get_setting('statistic_code'); ?>
+</div>
+
+
+<script type="text/javascript">
+  window.bughd = window.bughd || function(){};
+  bughd("create",{key:"d96d072cefc5ab3c6256af43ec8859bc"})
+</script>
+</body>
+</html>

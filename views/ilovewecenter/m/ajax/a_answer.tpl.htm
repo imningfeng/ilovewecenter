@@ -1,0 +1,49 @@
+<?php if ($this->comments) { ?>
+    <?php foreach ($this->comments AS $comment) { ?>
+        <dl>
+            <dt><img src="<?php echo get_avatar_url($comment['uid'], 'max'); ?>"
+                     onclick="window.location.href='m/people/<?php echo $comment['user_info']['url_token']; ?>'">
+            </dt>
+            <dd>
+                <h3>
+                    <a href="m/people/<?php echo $comment['user_info']['url_token']; ?>"><?php echo $comment['user_info']['user_name']; ?></a>
+                    <?php if ($comment['user_info']['verified'] == 'enterprise') { ?>
+                        <img src="<?php echo G_STATIC_URL ?>/mobile/images/v.png">
+                    <?php } ?>
+                    <?php if ($comment['at_user_info']) { ?><?php _e('回复'); ?>
+                        <a
+                        href="m/people/<?php echo $comment['at_user_info']['url_token']; ?>"><?php echo $comment['at_user_info']['user_name']; ?></a><?php } ?>
+                    <?php if ($comment['at_user_info']['verified'] == 'enterprise') { ?>
+                        <img src="<?php echo G_STATIC_URL ?>/mobile/images/v.png">
+                    <?php } ?>
+                </h3>
+                <p><?php echo nl2br($comment['message']); ?></p>
+                <div class="mod-footer" style="margin-top: 10px">
+                    <div class="meta">
+                        <?php if ($this->user_id) { ?>
+                            <span class="operate <?php if ($comment['vote_info']['rating'] == 1) { ?>active<?php } ?> ">
+                                <a class="answer_vote agree" onclick="AWS.User.article_comment_vote($(this), <?php echo $comment['id']; ?>,1)">
+                                    <i class="icon icon-agree"></i>
+                                    <b><?php echo $comment['votes']; ?></b>
+                                </a>
+                            </span>
+
+                            <span class="operate">
+                                <a class="aw-article-comment " data-id="<?php echo $comment['user_info']['uid']; ?>" >
+                                    <i class="icon icon-comment"></i>
+                                    <b><?php ?></b>
+                                </a>
+                            </span>
+                        <?php } ?>
+                    </div>
+                </div>
+            </dd>
+            <div class="clear"></div>
+        </dl>
+    <?php } ?>
+
+    <?php if (count($this->comments) >= 10) { ?>
+        <a class="aw-load-more" onclick="loadAnswer('<?php echo $this->type ?>',<?php echo $this->page ?>,this)"><i
+                    class="icon icon-loading icon-spin"></i> <span>更多</span></a>
+    <?php } ?>
+<?php } ?>

@@ -1,0 +1,43 @@
+<dl>
+    <dt> 
+        <a href="m/people/<?php echo $this->comment_info['user_info']['url_token']; ?>">
+        <img src="<?php echo get_avatar_url($this->comment_info['uid'], 'max'); ?>" onclick="window.location.href='m/people/<?php echo $this->comment_info['user_info']['url_token']; ?>'">
+        </a>
+    </dt>
+    <dd>
+        <h3>
+            <a href="m/people/<?php echo $this->comment_info['user_info']['url_token']; ?>"><?php echo $this->comment_info['user_info']['user_name']; ?></a>
+            <?php if ($this->comment_info['user_info']['verified'] == 'enterprise') { ?>
+                <img src="<?php echo G_STATIC_URL ?>/mobile/images/v.png">
+            <?php } ?>
+            <?php if ($this->comment_info['at_user_info']) { ?><?php _e('回复'); ?>
+                <a
+                href="m/people/<?php echo $this->comment_info['at_user_info']['url_token']; ?>"><?php echo $this->comment_info['at_user_info']['user_name']; ?></a><?php } ?>
+            <?php if ($this->comment_info['at_user_info']['verified'] == 'enterprise') { ?>
+                <img src="<?php echo G_STATIC_URL ?>/mobile/images/v.png">
+            <?php } ?>
+        </h3>
+        <p><?php echo nl2br($this->comment_info['message']); ?></p>
+        <div class="mod-footer" style="margin-top: 10px">
+            <div class="meta">
+                <?php if ($this->user_id) { ?>
+                    <span class="operate <?php if ($this->comment_info['vote_info']['rating'] == 1) { ?>active<?php } ?> ">
+                                <a class="answer_vote agree"
+                                   onclick="AWS.User.article_comment_vote($(this), <?php echo $this->comment_info['id']; ?>,1)">
+                                    <i class="icon icon-agree"></i>
+                                    <b><?php echo $this->comment_info['votes']; ?></b>
+                                </a>
+                            </span>
+
+                    <span class="operate">
+                                <a class="aw-article-comment "
+                                   data-id="<?php echo $this->comment_info['user_info']['uid']; ?>">
+                                    <i class="icon icon-comment"></i>
+                                </a>
+                            </span>
+                <?php } ?>
+            </div>
+        </div>
+    </dd>
+    <div class="clear"></div>
+</dl>

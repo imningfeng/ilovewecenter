@@ -1,0 +1,136 @@
+<?php  if ($this->search_result) { ?>
+
+    <?php if($this->search_type=='topics'):?>
+
+            <?php foreach ($this->search_result AS $key => $val):?>
+            <dl class="users">
+                    <dt><a href="<?php echo $val['url']; ?>"><img src="<?php echo $val['detail']['topic_pic']; ?>"></a>
+                    </dt>
+                    <dd>
+                        <a href="<?php echo $val['url']; ?>"><?php echo cjk_substr(str_replace(array("\r", "\n"), array(' ', ' '), strip_tags($val['name'])), 0, 10, 'UTF-8', '...'); ?></a>
+                    </dd>
+                    <dd>
+                        <a href="<?php echo $val['url']; ?>"><?php echo $val['detail']['focus_count']; ?>
+                            人关注<?php echo $val['detail']['discuss_count']; ?>人回复</a>
+                    </dd>
+                </dl>
+            <?php endforeach;?>
+
+    <?php elseif($this->search_type=='users'):?>
+
+        <?php foreach ($this->search_result AS $key => $val):?>
+            <dl class="<?php echo $val['type']; ?>">
+                <dt><a href="<?php echo $val['url']; ?>"><img src="<?php echo $val['detail']['avatar_file']; ?>"></a>
+                </dt>
+                <dd>
+                    <a href="<?php echo $val['url']; ?>"><?php echo cjk_substr(str_replace(array("\r", "\n"), array(' ', ' '), strip_tags($val['name'])), 0, 10, 'UTF-8', '...'); ?></a>
+                    <span><?php echo $val['detail']['signature']; ?></span>
+                </dd>
+            </dl>
+        <?php endforeach;?>
+    <?php elseif ($this->search_type == 'articles'): ?>
+        <?php foreach ($this->search_result AS $key => $val): ?>
+            <dl class="">
+                <div class="tj_top">
+                    <dl>
+                        <dt>
+                            <a href="m/people/<?php echo $val['user_info']['user_name']; ?>"><img src="<?php echo $val['user_info']['user_pic']; ?>"></a>
+                        </dt>
+                        <dd>
+                            <p>
+                                <a href="m/people/<?php echo $val['user_info']['user_name']; ?>"><?php echo $val['user_info']['user_name']; ?></a>发表了文章
+                                 <a type="aq" url="/m/article/<?php echo $val['search_id']; ?>"><?php echo cjk_substr(str_replace(array("\r", "\n"), array(' ', ' '), strip_tags($val['name'])), 0, 10, 'UTF-8', '...'); ?></a>
+                            </p>
+                            <span><a type="aq" url="/m/article/<?php echo $val['search_id']; ?>"><?php echo $val['detail']['comments']; ?>
+                            人评论<?php echo $val['detail']['views']; ?>人浏览</a></span>
+                        </dd>
+                    </dl>
+                </div>
+            </dl>
+        <?php endforeach; ?>
+    <?php elseif($this->search_type=='questions'):?>
+        <?php foreach ($this->search_result AS $key => $val):?>
+            <dl class="">
+                <div class="tj_top">
+                    <dl>
+                        <dt><a href="m/people/<?php echo $val['user_info']['user_name']; ?>"><img
+                                        src="<?php echo $val['user_info']['user_pic']; ?>"></a></dt>
+                        <dd>
+                            <p>
+                                <a href="m/people/<?php echo $val['user_info']['user_name']; ?>"><?php echo $val['user_info']['user_name']; ?></a>发表了问题
+                                 <a type="aq" url="/m/question/<?php echo $val['search_id']; ?>"><?php echo cjk_substr(str_replace(array("\r", "\n"), array(' ', ' '), strip_tags($val['name'])), 0, 10, 'UTF-8', '...'); ?></a>
+                            </p>
+                            <span><?php echo date('Y-m-d', $val['detail']['add_time']); ?></span>
+                        </dd>
+                    </dl>
+                </div>
+            </dl>
+            <?php endforeach;?>
+    <?php elseif($this->search_type=='all'):?>
+        <?php foreach ($this->search_result AS $key => $val):?>
+            <?php if ($val['type'] == 'articles'): ?>
+                
+            <dl class="">
+                <div class="tj_top">
+                    <dl>
+                        <dt>
+                            <a href="m/people/<?php echo $val['user_info']['user_name']; ?>"><img src="<?php echo $val['user_info']['user_pic']; ?>"></a>
+                        </dt>
+                        <dd>
+                            <p>
+                                <a href="m/people/<?php echo $val['user_info']['user_name']; ?>"><?php echo $val['user_info']['user_name']; ?></a>发表了文章
+                                 <a type="aq" url="/m/article/<?php echo $val['search_id']; ?>"><?php echo cjk_substr(str_replace(array("\r", "\n"), array(' ', ' '), strip_tags($val['name'])), 0, 10, 'UTF-8', '...'); ?></a>
+                            </p>
+                            <span><a type="aq" url="/m/article/<?php echo $val['search_id']; ?>"><?php echo $val['detail']['comments']; ?>
+                            人评论<?php echo $val['detail']['views']; ?>人浏览</a></span>
+                        </dd>
+                    </dl>
+                </div>
+            </dl>
+            <?php endif; ?>
+            <?php if ($val['type'] == 'topics'): ?>
+                <dl class="users">
+                    <dt><a href="<?php echo $val['url']; ?>"><img src="<?php echo $val['detail']['topic_pic']; ?>"></a>
+                    </dt>
+                    <dd>
+                        <a href="<?php echo $val['url']; ?>"><?php echo cjk_substr(str_replace(array("\r", "\n"), array(' ', ' '), strip_tags($val['name'])), 0, 10, 'UTF-8', '...'); ?></a>
+                    </dd>
+                    <dd>
+                        <a href="<?php echo $val['url']; ?>"><?php echo $val['detail']['focus_count']; ?>
+                            人关注<?php echo $val['detail']['discuss_count']; ?>人回复</a>
+                    </dd>
+                </dl>
+            <?php endif; ?>
+            <?php if ($val['type'] == 'users'): ?>
+                <dl class="<?php echo $val['type']; ?>">
+                    <dt><a href="<?php echo $val['url']; ?>"><img
+                                    src="<?php echo $val['detail']['avatar_file']; ?>"></a></dt>
+                    <dd>
+                        <a href="<?php echo $val['url']; ?>"><?php echo cjk_substr(str_replace(array("\r", "\n"), array(' ', ' '), strip_tags($val['name'])), 0, 10, 'UTF-8', '...'); ?></a>
+                        <span><?php echo $val['detail']['signature']; ?></span>
+                    </dd>
+                </dl>
+            <?php endif; ?>
+            <?php if ($val['type'] == 'questions'): ?>
+                <dl class="">
+                    <div class="tj_top">
+                        <dl>
+                            <dt><a href="m/people/<?php echo $val['user_info']['user_name']; ?>"><img
+                                            src="<?php echo $val['user_info']['user_pic']; ?>"></a></dt>
+                            <dd>
+                                <p>
+                                    <a href="m/people/<?php echo $val['user_info']['user_name']; ?>"><?php echo $val['user_info']['user_name']; ?></a>发表了问题 <a type="aq" url="/m/question/<?php echo $val['search_id']; ?>"><?php echo cjk_substr(str_replace(array("\r", "\n"), array(' ', ' '), strip_tags($val['name'])), 0, 10, 'UTF-8', '...'); ?></a>
+                                </p>
+                                <span><?php echo date('Y-m-d', $val['detail']['add_time']); ?></span>
+                            </dd>
+                        </dl>
+                    </div>
+                </dl>
+            <?php endif; ?>
+        <?php endforeach;?>
+    <?php endif;?>
+<?php } else { ?>
+    <div class="mod-body nodata">
+        <ul id="best_answers_listview"><p style="padding: 15px 0" align="center">没有内容</p></ul>
+    </div>
+<?php } ?>

@@ -1,0 +1,50 @@
+<?php if (is_array($this->list)) { ?>
+<?php foreach ($this->list AS $key => $val) { ?>
+<li>
+<div class="tj_top">
+	<dl>
+    	<i class="phb"><?php echo $val['ranking']; ?></i>
+    	<dt><a href="m/people/<?php echo $val['user_name'];?>"><img style="border-radius: 50%" src="<?php echo get_avatar_url($val['uid'], 'max'); ?>"></a></dt>
+        <dd>
+        	<p><a href="m/people/<?php echo $val['user_name'];?>"><?php echo $val['user_name']; ?></a><?php if ($val['verified']) { ?><img src="<?php echo G_STATIC_URL; ?>/mobile/images/v.png"><?php } ?></p>
+            <span><?php echo $val['job']; ?></span>
+        </dd>
+    </dl>
+</div>
+<div class="wwjf">
+	
+    <dl>
+        <dt><?php echo $val['integral']; ?></dt>
+        <dd>积分</dd>
+    </dl>
+    <dl>
+        <dt><?php echo $val['comment']; ?></dt>
+        <dd>评论</dd>
+    </dl>
+    <dl>
+        <dt><?php echo $val['agree_count']; ?></dt>
+        <dd>获赞</dd>
+    </dl>
+    <?php if(get_setting('thank')=='Y'):?>
+    <dl>
+        <dt><?php echo $val['thanks_count']; ?></dt>
+        <dd>感谢</dd>
+    </dl>
+    
+    <?PHP endif;?>
+    
+
+    <dl>
+        <dt><?php echo $val['reputation']; ?></dt>
+        <dd>威望</dd>
+    </dl>
+    <div class="clear"></div>
+</div>
+<div class="topic_t">
+    <?php foreach ($val['topic'] AS $k => $v) { ?>
+	<a href="m/topic/<?php echo $v['topic_title']; ?>"><?php echo $v['topic_title']; ?></a>
+	<?php }?>
+</div>     
+</li>
+<?php } ?>
+<?php } ?>

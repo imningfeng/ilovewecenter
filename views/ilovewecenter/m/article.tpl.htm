@@ -1,0 +1,226 @@
+<?php TPL::output('m/header.tpl.htm'); ?>
+<style type="text/css">
+.geetest_holder.geetest_wind {
+    min-width: 200px;
+    height: 36px;
+}
+.geetest_holder.geetest_wind .geetest_radar {
+    margin: 2px;
+}
+.geetest_holder.geetest_wind .geetest_radar_tip, .geetest_holder.geetest_wind .geetest_success_radar_tip {
+    top: -4px;
+}
+.geetest_holder.geetest_wind .geetest_logo, .geetest_holder.geetest_wind .geetest_success_logo {
+    top: 8px;
+}
+.ckeditor-html5-video video{
+	width: 100%;
+}
+</style>
+
+    <style>
+        .markitup-box br:first-child{
+            display: block;
+        }
+    </style>
+    <!-- 内容 -->
+    <div class="container padding-0" style="background: #f8f8f8">
+        <!-- 话题bar -->
+        <div class="aw-topic-bar clearfix" data-id="<?php echo $this->article_info['id']; ?>" data-type="article"
+             data-elite="<?php echo $this->article_info['elite']; ?>"
+             data-stickie="<?php echo $this->article_info['stickie']; ?>"
+             data-categoryname="<?php echo $this->categoryname; ?>">
+            <div class="tag-bar">
+                <?php foreach ($this->article_topics as $key => $val) {
+                    if ($key > 2) {
+                        break;
+                    } ?>
+                    <span class="topic-tag" data-id="<?php echo $val['topic_id'] ?>">
+						<a class="text"
+                           href="m/topic/<?php echo $val['url_token']; ?>"><?php echo $val['topic_title']; ?></a>
+					</span>
+                <?php } ?>
+                <?php if ($this->user_id && ($this->user_id==$this->article_info['uid'] || $this->user_info['permission']['is_administortar'])) { ?>
+                    <a class="icon icon-inverse aw-add-topic-box"><i
+                                class="icon icon-edit"></i>
+                    </a>
+                <?php } ?>
+            </div>
+        </div>
+        <!-- end 话题bar -->
+
+        <!-- 文章详情 -->
+        <div class="post_box" style="word-wrap:break-word;">
+            <div class="post_title">
+                <h2><?php echo $this->article_info['title']; ?></h2>
+            </div>
+            <div class="author_text">
+                <dl>
+                    <dt><a href="#"><img src="<?php echo get_avatar_url($this->article_info['uid'], 'max')?>"></a></dt>
+                    <dd>
+                        <span><?php echo $this->article_info['user_info']['user_name']; ?></span><label><?php echo date_friendly($this->article_info['add_time'], 604800, 'Y-m-d')?></label>
+                    </dd>
+                </dl>
+            </div>
+            <div class="Rich_text">
+                <?php echo $this->article_info['message']; ?>
+                <?php if ($this->article_info['attachs']) { ?>
+                    <div class="aw-upload-img-list">
+                        <?php foreach ($this->article_info['attachs'] AS $attach) { ?>
+                            <?php if ($attach['is_image'] AND !in_array($attach['id'], $this->article_info['attachs_ids'])) { ?>
+                                <a href="<?php echo $attach['attachment']; ?>" target="_blank"
+                                   data-fancybox-group="thumb" rel="lightbox"><img
+                                            src="<?php echo $attach['attachment']; ?>" class="img-polaroid"
+                                            alt="<?php echo $attach['attach_name']; ?>"/></a>
+                            <?php } ?>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+
+                <?php if ($this->article_info['attachs']) { ?>
+                    <ul class="aw-upload-file-list">
+                        <?php foreach ($this->article_info['attachs'] AS $attach) { ?>
+                            <?php if (!$attach['is_image'] AND !in_array($attach['id'], $this->article_info['attachs_ids'])) { ?>
+                                <li>
+                                    <a href="<?php echo download_url($attach['file_name'], $attach['attachment']); ?>"><i
+                                                class="icon icon-attach"></i> <?php echo $attach['file_name']; ?>
+                                    </a></li>
+                            <?php } ?>
+                        <?php } ?>
+                    </ul>
+                <?php } ?>
+            </div>
+            <div class="mod-footer active" >
+				<span class="aw-article-vote operate <?php if (!$this->user_id OR $this->user_id == $this->article_info['uid']) { ?> disabled<?php } ?>">
+                           <a class="agree" <?php if ($this->user_id) { ?>onclick="AWS.User.article_vote($(this), <?php echo $this->article_info['id']; ?>, 1);"<?php } ?>><i
+                                       class="icon icon-agree <?php if ($this->article_info['vote_info']['rating'] == 1) { ?> active<?php } ?>"></i> <b><?php echo $this->article_info['votes']; ?></b></a>
+                    <a <?php if ($this->user_id) { ?>onclick="AWS.User.favorite('article', <?php echo $this->article_info['id']; ?>,this);"<?php } ?>
+                       <?php if ($this->is_favorite){ ?>class="active" <?php } ?>
+                    >
+						<i class="icon icon-favor"></i>
+					</a>
+                    <?php if ((!$this->article_info['lock'] AND ($this->article_info['uid'] == $this->user_id OR $this->user_info['permission']['edit_question'])) OR $this->user_info['permission']['is_administortar'] OR $this->user_info['permission']['is_moderator']) { ?>
+                        <a href="m/addarticle/<?php echo $this->article_info['id']; ?>" class="icon icon-inverse" style="background-color: #f5f5f5;"> <i
+                                class="icon icon-edit"></i> <?php _e('编辑'); ?>
+                        </a>
+                    <?php } ?>
+				</span>
+                <!-- 赞同列表 -->
+               
+                    <div class="aw-article-voter">
+                        <?php foreach ($this->article_info['vote_users'] AS $key => $val) { ?>
+                            <a href="people/<?php echo $val['url_token']; ?>" class="voter" data-toggle="tooltip"
+                               data-placement="right" data-original-title="<?php echo $val['user_name']; ?>" id="user<?php echo $val['uid']; ?>"><img
+                                        class="img" style="border-radius: 50%" width="20"
+                                        alt="<?php echo $val['user_name']; ?>"
+                                        src="<?php echo get_avatar_url($val['uid'], 'max'); ?>"/></a>
+                        <?php } ?>
+                        <!--<a class="more-voters">...</a>-->
+                    </div>
+               
+                <!-- end 赞同列表 -->
+            </div>
+        </div>
+
+
+        <!-- end 文章详情 -->
+
+        <!-- 回复列表 -->
+        <div class="aw-replay-list" style="background: #f8f8f8;">
+            <div class="hot_reply" style="margin:10px 0">
+                <h4><span>热门回复</span><a class="tag"><img src="<?php echo G_STATIC_URL ?>/mobile/images/sq.png"><i>收起</i></a>
+                </h4>
+                <div class="reply_text">
+                    <a class="aw-load-more" onclick="loadAnswer('hot',1,this)"><i
+                                class="icon icon-loading icon-spin"></i> <span>更多</span></a>
+                </div>
+            </div>
+            <div class="hot_reply">
+                <h4><span>回复</span><a class="tag"><img
+                                src="<?php echo G_STATIC_URL ?>/mobile/images/sq.png"><i>收起</i></a>
+                </h4>
+                <div class="reply_text">
+                    <a class="aw-load-more" onclick="loadAnswer('normal',1,this)"><i
+                                class="icon icon-loading icon-spin"></i> <span>更多</span></a>
+                </div>
+            </div>
+        </div>
+        <!-- end 回复列表 -->
+
+        <?php if ($this->article_info['lock']) { ?>
+            <p align="center"><?php _e('该文章目前已经被锁定, 无法添加新评论'); ?></p>
+        <?php } else if (!$this->user_id) { ?>
+            <a class="aw-load-more" id="load_index_actions" href="account/login/"><?php _e('登录进行回复'); ?></a>
+        <?php } else { ?>
+            <!-- 回复box -->
+            <div style="background: #ffffff;padding-bottom: 39px" class="aw-replay-box article">
+                <form action="article/ajax/save_comment/" onsubmit="return false;" method="post" id="answer_form">
+                    <input type="hidden" name="post_hash" value="<?php echo new_post_hash(); ?>"/>
+                    <input type="hidden" name="article_id" value="<?php echo $this->article_info['id']; ?>"/>
+                    <div class="mod-head" style="font-size: 12px;line-height: 20px">
+                        <a href="m/people/"><img width="20" class="img" style="border-radius: 50%"
+                                                 src="<?php echo get_avatar_url($this->user_id, 'max'); ?>"
+                                                 alt=""/></a> <?php echo $this->user_info['user_name']; ?>
+                    </div>
+                    <div class="mod-body">
+                        <textarea class="form-control autosize" rows="5" name="message"></textarea>
+                    </div>
+                    <div class="mod-footer clearfix">
+                        <a class="btn btn-success btn-normal pull-right" style="background: #38adff"
+                           onclick="AWS.ajax_post($('#answer_form'), AWS.ajax_processer, 'reply');"><?php _e('回复'); ?></a>
+                    </div>
+                </form>
+            </div>
+            <!-- end 回复box -->
+        <?php } ?>
+    </div>
+
+    <script type="text/javascript">
+
+        var ARTICLE_ID =<?php echo $this->article_info['id']; ?>;
+        var TEMPLATE_MES = '';
+        var ANSWER_EDIT_TIME = <?php echo get_setting('answer_edit_time'); ?>;
+        var USER_ANSWERED = '<?php echo $this->user_answered; ?>';
+        $(function () {
+
+            $(".hot_reply .tag").click(function () {
+                var $e = $(this);
+                if ($e.parent().next().is(":hidden")) {
+                    $e.parent().next().fadeIn(function () {
+                        $e.find("img").attr("src", "<?php echo G_STATIC_URL ?>/mobile/images/sq.png").next().text("收起");
+                    });
+                } else {
+                    $e.parent().next().fadeOut(function () {
+                        $e.find("img").attr("src", "<?php echo G_STATIC_URL?>/mobile/images/open_ico.png").next().text("展开");
+                    });
+                }
+            });
+            $(".hot_reply .aw-load-more").click();
+
+            <?php if($this->user_id){ ?>
+            document.querySelector('body').addEventListener('touchend', function(e) {
+                if(e.target.tagName != 'textarea') {
+                    document.querySelector('textarea').blur();
+                }
+            });
+            <?php } ?>
+
+        });
+
+        function loadAnswer(type, page, e) {
+            var $answerList = $(e).parent();
+            if (!$(e).hasClass("loading")) {
+                $(e).addClass("loading");
+                $.get(G_BASE_URL + '/m/ajax/' + (type == 'hot' ? 'hot_comment_list' : 'comment_list') + '/', 'articleId=' + ARTICLE_ID + '&page=' + page, function (result) {
+                    $(e).remove();
+                    if (result && $.trim(result)) {
+                        $answerList.append(result);
+                    }
+                })
+            }
+        }
+
+    </script>
+    <!-- end 内容 -->
+
+<?php TPL::output('m/footer.tpl.htm'); ?>

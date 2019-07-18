@@ -1,0 +1,377 @@
+<?php TPL::output('m/header.tpl.htm'); ?>
+
+<!-- 内容 -->
+<div class="container" style="padding: 0;">
+	<form action="publish/ajax/<?php if ($this->article_info['id']) { ?>modify<?php } else { ?>publish<?php } ?>_article/" method="post" id="article_form" onsubmit="return false;">
+		<input type="hidden" name="post_hash" value="<?php echo new_post_hash(); ?>" />
+		<input type="hidden" name="article_id" id="article_id" value="<?php echo $this->article_info['id']; ?>" />
+		<input type="hidden" name="attach_access_key" value="<?php echo $this->attach_access_key; ?>" />
+		<input type="hidden" name="ssid" value="<?php echo $this->ssid;?>" />
+		<?php if ($this->weixin_media_id) { ?>
+		<input type="hidden" name="weixin_media_id" value="<?php echo $this->weixin_media_id; ?>" />
+		<input type="hidden" name="weixin_pic_url" value="<?php echo $this->weixin_pic_url; ?>" />
+		<?php } ?>
+		<div class="aw-publish-box" style="margin-top: 0;">
+			<div id="step1">
+			<!-- 问题标题 -->
+			<article class="fqtitle">
+				<input name="title" type="text" placeholder="<?php _e('输入文章标题'); ?>" value="<?php echo $this->article_info['title']; ?>">
+			</article>
+			<!-- end 问题标题 -->
+			<div style="background: #f8f8f8;height: 10px;"></div>
+			<!-- 问题补充 -->
+			<article class="fatxtarea">
+				<div id="editorContainer"></div>
+				<input type="file" id="inputFile" style="display: none;">
+				<textarea name="message" style="display: none;" cols="" rows="" placeholder="<?php _e('输入文章内容'); ?>"><?php echo $this->article_info['message']; ?></textarea>
+					<?php if($_GET['id']){ ?>
+						<!-- 分类 -->
+						<?php if ($this->article_category_list) { ?>
+						<div class="category clearfix">
+							<select name="category_id" id="category_id">
+								<option value="0">- <?php _e('请选择分类'); ?> -</option>
+								<?php echo $this->article_category_list; ?>
+							</select>
+							<!--<i class="icon icon-down"></i>-->
+						</div>
+						<?php } ?>
+						<!-- end 分类 -->
+						<div class="command">
+							<article class="fafb">
+								<input onclick="fabu(); return false;" type="button" value="发布">
+							</article>
+						</div>
+					<?php } ?>
+					<?php if(!$_GET['id']){ ?>
+					<input onclick="toStep2()" class="op_btn" type="button" value="下一步">
+					<?php } ?>
+			</article>
+			</div>
+			<!-- end 问题补充 -->
+			<div id="step2" style="display: none">
+				<!-- 分类 -->
+				<?php if ($this->article_category_list && !$_GET['id']) { ?>
+				<div class="category clearfix">
+					<select name="category_id" id="category_id">
+						<option value="0">- <?php _e('请选择分类'); ?> -</option>
+						<?php echo $this->article_category_list; ?>
+					</select>
+					<!--<i class="icon icon-down"></i>-->
+				</div>
+				<?php } ?>
+				<!-- end 分类 -->
+				<article class="facon">
+					<article class="changeht">
+						<span class="addht"><input id="search_topic" type="text" placeholder="搜索话题"></span>
+						<span class="cht">
+							<ul>
+							</ul>
+							<div style="clear: both"></div>
+						</span>
+					</article>
+					<div id="topic_res">
+					</div>
+				</article>
+
+				<?php if ($this->human_valid) { ?>
+				<div class="aw-auth-img clearfix">
+					<input class="form-control pull-left" type="text" name="seccode_verify" placeholder="验证码" />
+					<em class="auth-img pull-left"><img src="" onclick="this.src = G_BASE_URL + '/account/captcha/' + Math.floor(Math.random() * 10000);" id="captcha"  /></em>
+				</div>
+				<?php } ?>
+
+				<div class="command op_btn">
+					<article class="fafb" style="display: flex;">
+						<button onclick="AWS.ajax_post($('#article_form')); return false;">发布</button>
+						<button onclick="toStep1()">上一步</button>
+					</article>
+				</div>
+			</div>
+
+		</div>
+	</form>
+
+</div>
+<!-- end 内容 -->
+<script src="<?php echo G_STATIC_URL; ?>/mobile/js/zx-editor.min.js"></script>
+<script type="text/javascript">
+    var CATEGORY_ID = <?php echo $this->article_info['category_id']; ?>;
+    var ATTACH_ACCESS_KEY = '<?php echo $this->attach_access_key; ?>';
+    var PUBLISH_TYPE = 'article';
+    var zxEditor = new ZxEditor('#editorContainer', {
+        // 顶部偏移距离
+        // demo有顶部导航栏，高度44
+        top: 44,
+        // 编辑框左右边距
+        padding: 0,
+		bottom:10
+    });
+    $('.zxeditor-content-wrapper').css('margin-bottom',0)
+    $('.zxeditor-content-wrapper').css('height',($(window).height()-280))
+    $('.zxeditor-content-wrapper').css('overflow-y','scroll')
+    var $inputFile = document.querySelector('#inputFile')
+    zxEditor.on('select-picture', function () {
+        // 触发input点击事件
+        $inputFile.click();
+    })
+	var message = $('textarea[name=message]').val()
+    zxEditor.setContent(message)
+    $inputFile.addEventListener('change', function (e) {
+        var files = e.target.files; // 或者 $inputFile.files
+        var file = files[0]
+        // 上传文件至服务器
+        upload({
+            // 接收上传文件的服务器url
+            url: '<?php echo get_js_url('/publish/ajax/attach_upload/id-article__attach_access_key-'.$this->attach_access_key); ?>&aws_upload_file='+file.name+'&timestamp='+(new Date()).getTime(),
+            file: file,
+            success: function (res) {
+                try {
+                    // 服务器返回的json字符串
+                    res = JSON.parse(res)
+                    if (!res.error) {
+                        // 添加图片至编辑器内
+                        zxEditor.addImage(res.thumb.replace('90x90_',''))
+                    } else {
+                        layer.open({
+                            content: res.error
+                            ,skin: 'msg',time: 2
+                        });
+                    }
+                } catch (e) {}
+            },
+            error: function (err) {
+                alert('文件上传失败')
+                console.error(err)
+            },
+			complete:function(){
+                $('#inputFile').val('')
+            }
+        })
+    })
+    <?php if(is_mobile()){ ?>
+        var winHeight = $(window).height();   //获取当前页面高度
+		$(window).resize(function(){
+			var thisHeight=$(this).height();
+			if(winHeight - thisHeight >50){
+				//当软键盘弹出，在这里面操作
+				$('.op_btn,.nav').hide()
+			}else{
+				//当软键盘收起，在此处操作
+				$('.op_btn,.nav').show()
+			}
+		});
+    <?php } ?>
+
+    function fabu(){
+        if(!$('input[name=title]').val().trim()){
+            layer.open({
+                content: '请输入问题标题'
+                ,skin: 'msg',time: 2
+            });
+            return false
+        }
+        var html = zxEditor.getContent()
+        var txt = zxEditor.removeHtmlTags(html).replace(/&nbsp;/g,'')
+        if(!txt.trim()){
+            layer.open({
+                content: '请输入文章内容'
+                ,skin: 'msg',time: 2
+            });
+            return false
+        }
+        $('textarea[name=message]').val(html)
+        AWS.ajax_post($('#article_form'));
+	}
+
+	$(document).ready(function () {
+        
+		$('.aw-add-topic-box').click();
+
+		// 判断是否微信打开
+		if (typeof window.WeixinJSBridge != 'undefined')
+		{
+			$('header, nav, footer').hide();
+		}
+
+		if (ATTACH_ACCESS_KEY != '')
+		{
+			var fileupload = new FileUpload('file' ,'.aw-upload-box .icon-pic', '.aw-upload-box .upload-container', G_BASE_URL + '/publish/ajax/attach_upload/id-question__attach_access_key' + '-' + ATTACH_ACCESS_KEY, {'insertTextarea' : '#message', 'deleteBtnTemplate' : '<a class="delete-file"><i class="icon icon-delete"></i></a>', 'insertBtnTemplate' : '<a class="insert-file"><i class="icon icon-insert"></i></a>', 'editor': $('#message')});
+		}
+
+		if ($('#category_id').length)
+		{
+			var category_data = '';
+
+			$.each($('#category_id option').toArray(), function (i, field) {
+				if (i > 0)
+				{
+					if (i > 1)
+					{
+						category_data += ',';
+					}
+
+					category_data += "{'title':'" + $(field).text() + "', 'id':'" + $(field).val() + "'}";
+				}
+			});
+
+			//AWS.Dropdown.add_dropdown_list('.aw-publish-dropdown', eval('[' + category_data + ']'), CATEGORY_ID);
+
+			$('.aw-publish-dropdown .dropdown-menu li a').click(function() {
+				$('#category_id').val($(this).attr('data-value'));
+			});
+		}
+
+		if ($('.aw-publish-dropdown').length)
+		{
+			$.each($('.aw-publish-dropdown .dropdown-menu li a'),function(i, e)
+			{
+				if ($(e).attr('data-value') == $('#category_id').val())
+				{
+					$('.aw-publish-dropdown span').html($(e).html());
+
+					return;
+				}
+			});
+		}
+
+		if ($('#quick_publish_topic_chooser').length)
+		{
+			$('#quick_publish_topic_chooser').click();
+		}
+
+		if ($('#question_id').length)
+		{
+			ITEM_ID = $('#question_id').val();
+		}
+		else if ($('#article_id').length)
+		{
+			ITEM_ID = $('#article_id').val();
+		}
+
+		// 微信图片发起
+		if ($('input[name="weixin_pic_url"]').val() != undefined)
+		{
+			$('.upload-list').append(
+				'<li>'+
+					'<div class="img" style="background-image: url(' + $('input[name="weixin_pic_url"]').val() + ');"></div>'+
+					'<div class="content">'+
+						'<p class="meta">'+
+							'<span class="color-999">图片已插入</span>'+
+							'<a class="insert-file disabled"><i class="icon icon-insert"></i></a>'+
+						'</p>'+
+					'</div>'+
+				'</li>');
+		}
+
+		if (ITEM_ID && G_UPLOAD_ENABLE == 'Y' && ATTACH_ACCESS_KEY != '')
+		{
+			if ($(".aw-upload-box .upload-list").length) {
+				$.post(G_BASE_URL + '/publish/ajax/' + PUBLISH_TYPE + '_attach_edit_list/', PUBLISH_TYPE + '_id=' + ITEM_ID, function (data) {
+					if (data['err']) {
+						return false;
+					} else {
+						$.each(data['rsm']['attachs'], function (i, v) {
+						   fileupload.setFileList(v);
+						});
+					}
+				}, 'json');
+			}
+		}
+
+	});
+    function toStep2(){
+        if(!$('input[name=title]').val().trim()){
+            layer.open({
+                content: '请输入文章标题'
+                ,skin: 'msg',time: 2
+            });
+            return false
+        }
+        var html = zxEditor.getContent()
+		var txt = zxEditor.removeHtmlTags(html).replace(/&nbsp;/g,'')
+        if(!txt.trim()){
+            layer.open({
+                content: '请输入文章内容'
+                ,skin: 'msg',time: 2
+            });
+            return false
+        }
+        $('textarea[name=message]').val(html)
+        $('#step1').hide()
+        $('#step2').show()
+    }
+    function toStep1(){
+        $('#step1').show()
+        $('#step2').hide()
+    }
+    $('.changeht .cht').on('click','li',function(){
+        $(this).remove()
+    })
+    $('#topic_res').on('click','.htlist',function(){
+        var text = $(this).find('b').text()
+        var html = '<li class="on"><em><a href="#">'+text+'</a><i>X</i></em><input type="hidden" name="topics[]" value="'+text+'" /></li>'
+        $('.cht ul').append(html)
+    })
+    $('#topic_res').on('click','.focus',function(e){
+        var selector = $(this)
+        var data = {
+            'topic_id': $(this).attr('topic_id')
+        };
+        var url = '?/topic/ajax/focus_topic/';
+        $.ajax({
+            url:url,
+            data:data,
+            dataType:'json',
+            type:'post',
+            async:false,
+            success:function(res) {
+                if (res.rsm.type == 'add') {
+                    selector.addClass("gray")
+                    selector.css({background: '#e2e2e2', color: '#666666'})
+                    selector.val('已关注')
+                }
+                else {
+                    selector.removeClass("gray")
+                    selector.css({background: '#38adff', color: '#FFF'})
+                    selector.val('关注')
+                }
+            }
+        })
+        e.stopPropagation()
+    })
+    $('#search_topic').bind('keydown',function(event){
+        if(event.keyCode == "13") {
+            var text = $('#search_topic').val()
+            var html = '<li class="on"><em><a href="#">'+text+'</a><i>X</i></em><input type="hidden" name="topics[]" value="'+text+'" /></li>'
+            $('.cht ul').append(html)
+        }
+    });
+    $('#search_topic').on('input',function(){
+        var q = $(this).val()
+        var url = G_BASE_URL + '/search/ajax/search/?type=topics&q=' + encodeURIComponent(q) + '&limit=10';
+        $.get(url,function(res){
+            var html = ''
+            for(var i=0;i<res.length;i++){
+                html += '<article class="htlist">'
+                html += '<dl>'
+                html += '<dt><img src="'+res[i].detail.topic_pic+'"></dt>'
+                html += '<dd>'
+                html += '<p>'
+                html += '<b>'+res[i].name+'</b>'
+                html += '<em>'+res[i].detail.focus_count+'个关注&nbsp;•&nbsp;'+res[i].detail.discuss_count+'个问题</em>'
+                html += '</p>'
+                if(res[i].has_focus){
+                    html += '<input type="button" class="gary focus" topic_id="'+res[i].detail.topic_id+'" value="已关注" />'
+                }else{
+                    html += '<input type="button" class="focus" topic_id="'+res[i].detail.topic_id+'" value="关注" />'
+                }
+                html += '</dd>'
+                html += '</dl>'
+                html += '</article>'
+            }
+            $('#topic_res').html(html)
+        },'json');
+    });
+</script>
+
+<?php TPL::output('m/footer.tpl.htm'); ?>

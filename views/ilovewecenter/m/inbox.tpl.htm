@@ -1,0 +1,54 @@
+<?php TPL::output('m/header.tpl.htm'); ?>
+
+<!-- 标题 -->
+<div class="top-nav">
+	<ul>
+		<li>
+			<a href="m/inbox/" class="active"><?php _e('我的私信'); ?> 
+					<?php if ($this->user_info['inbox_unread'] != 0) {?>
+						<span class="badge badge-danger"><?php echo $this->user_info['inbox_unread']?></span>
+					<?php } ?><!-- <i class="icon-tips"></i> -->
+			</a>
+		</li>
+		<li>
+			<a href="m/notifications/"><?php _e('消息通知'); ?> <?php if ($this->user_info['notification_unread']) { ?><span class="badge badge-danger"><?php echo $this->user_info['notification_unread']; ?></span><?php } ?></a>
+		</li>
+	</ul>
+</div>
+
+<!-- <div class="gztj_tab topic_class">
+  <ul>
+      <li><a href="#">我关注的话题</a></li>
+        <li class="cur"><a href="#">全部话题</a></li>
+    </ul>
+</div>
+<div class="aw-title">
+	<?php _e('我的私信'); ?>
+
+	
+</div> -->
+<!-- end 标题 -->
+
+<!-- 内容 -->
+<div class="container">
+	<!-- 私信列表 -->
+	<div class="aw-feed-list aw-inbox-list active">
+		<div class="mod-body">
+			<ul id="inbox_listview">
+			</ul>
+		</div>
+		<div class="mod-footer">
+			<a id="load_inbox" class="aw-load-more"><i class="icon icon-loading icon-spin"></i> <span>更多</span></a>
+		</div>
+	</div>
+	<!-- end 私信列表 -->
+</div>
+<!-- end 内容 -->
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		AWS.load_list_view(G_BASE_URL + '/m/ajax/inbox_list/', $('#load_inbox'), $('#inbox_listview'), 1);
+	});
+</script>
+
+<?php TPL::output('m/footer.tpl.htm'); ?>
