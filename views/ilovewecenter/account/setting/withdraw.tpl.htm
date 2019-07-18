@@ -1,0 +1,79 @@
+<?php TPL::output('global/header.tpl.htm'); ?>
+<?php TPL::output('account/setting/setting_header.tpl.htm'); ?>
+<style type="text/css">
+	label{width:190px !important;}
+</style>
+<!-- 提现 -->
+<div class="aw-mod">
+	<div class="mod-body">
+		<div class="aw-mod mod-base">
+		<?php if($this->user['valid_mobile']){?>
+			<div class="mod-head">
+				<h3>
+					<?php _e('提现申请:当前余额￥'); echo $this->balance;?> 
+					<?php _e('可提现额度￥'); echo floor(($this->balance/(1+get_setting('charges_rate')))*100)/100 ;?>
+					<a href="javascript:;" style="background-color: #499ef3;color: #fff;" class="btn btn-large  pull-right" onclick="$('.money').val(<?php echo floor(($this->balance/(1+get_setting('charges_rate')))*100)/100?>)">全部提现</a>
+				</h3>
+			</div>
+			<form id="setting_form" method="post" action="account/ajax/apply_withdraw/">
+			<input type="hidden" name="ssid" value="<?php echo $this->ssid;?>" />
+				<div class="aw-mod mod-contact">
+					<div class="mod-body clearfix">
+						<ul>
+							<li>
+								<label for="input-qq"><?php _e('持卡人名称'); ?>:</label>
+							    <input class="form-control" type="text" name="username" value="<?php echo $this->info['username']?$this->info['username']:'';?>" />
+							</li>
+							<li>
+								<label for="input-mobile"><?php _e('银行预留手机号码'); ?>:</label>
+							    <input class="form-control" type="text" name="mobile" value="<?php echo $this->info['mobile']?$this->info['mobile']:'';?>" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" maxLength=11/>
+							</li>
+							<li>
+								<label for="input-common-email"><?php _e('银行名称'); ?>:</label>
+							    <input class="form-control" type="text" name="bank" value="<?php echo $this->info['bank']?$this->info['bank']:'';?>" />
+							</li>
+							<li>
+								<label for="input-homepage"><?php _e('开户行'); ?>:</label>
+							    <input class="form-control" type="text" name="open_bank" value="<?php echo $this->info['open_bank']?$this->info['open_bank']:'';?>" />
+							</li>
+							<li>
+								<label for="input-homepage"><?php _e('省市区'); ?>:</label>
+							    <input class="form-control" type="text" name="address" value="<?php echo $this->info['address']?$this->info['address']:'';?>" />
+							</li>
+							<li>
+								<label for="input-homepage"><?php _e('身份证'); ?>:</label>
+							    <input class="form-control" type="text" name="identity" value="<?php echo $this->info['identity']?$this->info['identity']:'';?>" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"/>
+							</li>
+							<li>
+								<label for="input-homepage"><?php _e('卡号'); ?>:</label>
+							    <input class="form-control" type="text" name="card" value="<?php echo $this->info['card']?$this->info['card']:'';?>" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"/>
+							</li>
+							<li>
+								<label for="input-homepage"><?php _e('提现金额'); ?>:</label>
+							    <input class="form-control money" type="text" name="money" value="" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"/>
+                                <span class="" style="color: red;"><?php _e('提现手续费：'.(get_setting('charges_rate'))*100); ?>%</span>
+
+							</li>
+							<li>
+								<label for="input-homepage"><?php _e('交易密码'); ?>:</label>
+							    <input class="form-control" type="password" name="pwd" value="" />
+							</li>
+						</ul>
+					</div>
+				</div>
+			</form>
+			
+		</div>
+	</div>
+	<div class="mod-footer clearfix">
+		<a href="javascript:;" class="btn btn-large btn-success pull-right" onclick="AWS.ajax_post($('#setting_form'), AWS.ajax_processer, 'withdraw_back');"><?php _e('保存'); ?></a>
+	</div>
+	<?php }else{?>
+		<div class="mod-head">
+			<h3><?php _e('<a href="/account/setting/profile/" style="color:blue;">未绑定手机号</a>或者<a href="/account/setting/profile/" style="color:blue;">设置交易密码</a>'); ?></h3>
+		</div>
+	<?php }?>
+</div>
+
+<?php TPL::output('account/setting/setting_footer.tpl.htm'); ?>
+<?php TPL::output('global/footer.tpl.htm'); ?>

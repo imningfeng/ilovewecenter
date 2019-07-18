@@ -1,0 +1,187 @@
+<?php TPL::output('global/header_meta.tpl.htm'); ?>
+<style type="text/css">
+.oldPwdTip {
+    position: absolute;
+    color: rgba(153, 153, 153, 1);
+    margin-top: 6px;
+    margin-left: 0px;
+    text-align: left;
+    left: -5px;
+    top: -5px;
+    padding: 0 15px;
+    width: 100%;
+    height: 40px;
+    line-height: 38px;
+    color: #777777;
+}   
+</style>
+<div class="aw-register-box">
+    <div class="mod-head">
+        <a href=""><img src="<?php echo G_STATIC_URL; ?>/css/<?php echo $this->template_name; ?>/img/login_logo.png" alt="" /></a>
+        <h1><?php _e('修改密码'); ?></h1>
+    </div>
+    <div class="mod-body">
+        <form class="aw-register-form" id="fpw_form" method="post" action="<?php echo $this->action_link?>">
+            <?php if($this->type){?>
+                <input type="hidden" name="type" value="<?php echo $this->type?>">
+            <?php }?>
+            <input type="hidden" name="active_code" value="<?php echo htmlspecialchars($_GET['key']); ?>"/>
+            <ul>
+                <li class="error alert-danger collapse error_message" style="border: none;">
+                    <p style="background: none repeat scroll 0 0 #eed3d7;border:none;border-radius: 0;color: #666;height: 30px;line-height: 30px;padding-left: 12px;text-align: left;"><i class="icon-remove"></i><em></em></p>             </li>
+                <li>
+                    <label class="oldPwdTip aw-search-query-label">新密码</label>
+
+                    <input class="aw-register-email form-control password" id="find_password" type="password"  tips="<?php _e('请输入 6-16 个字符,区分大小写'); ?>" errortips="<?php _e('密码不符合规则'); ?>"/>
+                    <input id="find_password_reset" type="hidden" name="password" value=""/>
+                </li>
+                <li>
+                    <label class="oldPwdTip aw-search-query-label">确认新密码</label>
+
+                    <input style="padding-left: 15px !important;" class="aw-register-email form-control re_password" id="find_re_password" type="password"  tips="<?php _e('请输入 6-16 个字符,区分大小写'); ?>" errortips="<?php _e('密码不符合规则'); ?>" />
+                    <input id="find_re_password_reset" type="hidden" name="re_password" value="" />
+                </li>
+                
+                <!-- <li class="aw-register-verify">
+                    <img id="captcha" onclick="this.src = G_BASE_URL + '/account/captcha/' + Math.floor(Math.random() * 10000);" src="" class="auth-img pull-right"/>
+                    <input class="form-control" type="text" name="seccode_verify" placeholder="<?php _e('验证码'); ?>" />
+                </li> -->
+                <li class="aw-register-verify">
+                    <div class="embed-captcha"></div>
+                    <p class="wait">正在加载验证码......</p>
+                </li>
+                <li class="clearfix">
+                    <button class="btn btn-large btn-blue btn-block submit" id="zhuce"><?php _e('重置密码'); ?></button>
+                </li>
+                <li class="last" style="cursor: pointer">
+                    <a href="/" class="pull-right" >网站首页</a>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
+
+<?php TPL::output('global/footer.tpl.htm'); ?>
+<script type="text/javascript">
+ $(".password").prev(".oldPwdTip").click(function(){
+    $(".password").focus();
+});  
+ $(".re_password").prev(".oldPwdTip").click(function(){
+    $(".re_password").focus();
+});    
+ $(".password").focus(function(){
+    $(this).prev(".oldPwdTip").hide();
+});
+ $(".password").blur(function(){
+    if(!$(this).val())
+    $(this).prev(".oldPwdTip").show();
+});
+ $(".re_password").focus(function(){
+    $(this).prev(".oldPwdTip").hide();
+});
+ $(".re_password").blur(function(){
+    if(!$(this).val())
+    $(this).prev(".oldPwdTip").show();
+}); 
+verify_fpw_form('#fpw_form');
+function verify_fpw_form(element){
+    $(element).find('[type=text], [type=password]').on({
+        focus: function () {
+            if (typeof $(this).attr('tips') != 'undefined' && $(this).attr('tips') != '') {
+                $(this).parent().find('.aw-reg-tips').detach();
+                $(this).parent().append('<b class="aw-reg-tips">' + $(this).attr('tips') + '</b>');
+            }
+        },
+        blur: function () {
+            if ($(this).attr('tips') != '')
+            {
+                switch ($(this).attr('name'))
+                {
+                    case 'password' :
+                        $(this).parent().find('.aw-reg-tips').detach();
+                        if ($(this).val().length >= 0 && $(this).val().length < 6)
+                        {
+                            $(this).parent().find('.aw-reg-tips').detach();
+                            $(this).parent().append('<b class="aw-reg-tips aw-reg-err"><i class="aw-icon i-err"></i>' + $(this).attr('errortips') + '</b>');
+                            return;
+                        }
+                        if ($(this).val().length > 17)
+                        {
+                            $(this).parent().find('.aw-reg-tips').detach();
+                            $(this).parent().append('<b class="aw-reg-tips aw-reg-err"><i class="aw-icon i-err"></i>' + $(this).attr('errortips') + '</b>');
+                            return;
+                        }
+                        else
+                        {
+                            $(this).parent().find('.aw-reg-tips').detach();
+                        }
+                        return;
+
+                    case 're_password' :
+                        $(this).parent().find('.aw-reg-tips').detach();
+                        if ($(this).val().length >= 0 && $(this).val().length < 6)
+                        {
+                            $(this).parent().find('.aw-reg-tips').detach();
+                            $(this).parent().append('<b class="aw-reg-tips aw-reg-err"><i class="aw-icon i-err"></i>' + $(this).attr('errortips') + '</b>');
+                            return;
+                        }
+                        if ($(this).val().length > 17)
+                        {
+                            $(this).parent().find('.aw-reg-tips').detach();
+                            $(this).parent().append('<b class="aw-reg-tips aw-reg-err"><i class="aw-icon i-err"></i>' + $(this).attr('errortips') + '</b>');
+                            return;
+                        }
+                        else
+                        {
+                            $(this).parent().find('.aw-reg-tips').detach();
+                        }
+                        return;
+                }
+            }
+        }
+    });
+};
+var handlerEmbed = function (captchaObj) {
+    $('#zhuce').click(function(){
+        var validate = captchaObj.getValidate();
+        if (!validate) {
+            AWS.alert("请先完成验证");
+            return false;
+        } else{
+
+            $('#find_password_reset').val(encrypt_pass($('#find_password').val()));
+            $('#find_re_password_reset').val(encrypt_pass($('#find_re_password').val()));
+
+            AWS.ajax_post($('#fpw_form'), AWS.ajax_processer, 'error_message'); 
+            captchaObj.reset(); // 调用该接口进行重置 
+            return false;
+        }
+    });
+    // 将验证码加到id为captcha的元素里，同时会有三个input的值：geetest_challenge, geetest_validate, geetest_seccode
+    captchaObj.appendTo(".embed-captcha");
+    captchaObj.onReady(function () {
+        $(".wait").css('display','none');
+    });
+};
+
+$.ajax({
+    // 获取id，challenge，success（是否启用failback）
+    url: G_BASE_URL+ "/account/slide_captcha/?t=" + (new Date()).getTime()+"&client_type='web'", // 加随机数防止缓存
+    type: "get",
+    dataType: "json",
+    success: function (data) {
+        var dataObj = eval('(' + data.rsm + ')');
+        // 使用initGeetest接口
+        // 参数1：配置参数
+        // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它做appendTo之类的事件
+        initGeetest({
+            gt: dataObj.gt,
+            challenge: dataObj.challenge,
+            new_captcha: dataObj.new_captcha,
+            offline: !dataObj.success, // 表示用户后台检测极验服务器是否宕机，一般不需要关注
+            product: "embed", // 产品形式，包括：float，embed，popup。注意只对PC版验证码有效
+            width: '100%' // 设置按钮宽度, 与父元素宽度一致
+        }, handlerEmbed);
+    }
+});
+</script>
