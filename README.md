@@ -1,3 +1,5 @@
+[![screenshot.png](https://i.loli.net/2019/07/18/5d308497e0ed434271.png)](https://i.loli.net/2019/07/18/5d308497e0ed434271.png)
+
 ## ilovewecenter
 我爱WeCenter模板，演示地址：https://www.dalaofang.com/
 
