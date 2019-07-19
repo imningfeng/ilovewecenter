@@ -25,7 +25,7 @@
 <link href="<?php echo G_STATIC_URL; ?>/css/<?php echo $this->template_name; ?>/<?php echo $this->template_name; ?>.css" rel="stylesheet" type="text/css" />
 <?php } ?>
 <?php if ($this->user_id) { ?>
-<link href="https://www.dalaofang.com/static/css/dalaofang/fixed.css" rel="stylesheet" type="text/css" />
+<link href="/static/css/dalaofang/fixed.css" rel="stylesheet" type="text/css" />
 <?php } else { ?>
 <?php } ?>
 <?php $post_hash_var_name = strtoupper(md5(TIMESTAMP . $this->userinfo['salt'])); ?>
@@ -62,28 +62,6 @@
 <script type="text/javascript" src="<?php echo G_STATIC_URL ?>/js/laydate/laydate.js"></script>
 <script type="text/javascript" src="<?php echo G_STATIC_URL; ?>/js/slide_captcha/gt.js"></script>
 <script src="<?php echo G_STATIC_URL; ?>/js/crypto-js.js"></script>
-
-<!-- 百度统计代码 -->
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?69db2201a3b25695aafe8c457057bf2c";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-<!-- 百度统计代码 -->
-
-<!-- Google Adsense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-  (adsbygoogle = window.adsbygoogle || []).push({
-    google_ad_client: "ca-pub-1692609014354291",
-    enable_page_level_ads: true
-  });
-</script>
-<!-- Google Adsense -->
 
 <style type="text/css">
 .geetest_radar_tip_content{
