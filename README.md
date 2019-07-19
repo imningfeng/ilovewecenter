@@ -18,7 +18,8 @@ Github地址：https://github.com/imningfeng/ilovewecenter
 
 上传压缩包到网站根目录，并且解压；
 登录网站后台 - 全局设置 - 界面设置，用户界面风格选择ilovewecenter，然后点击保存设置。
-全站底部设置方法
+
+## 底部设置
 
 ### 第一步
 
