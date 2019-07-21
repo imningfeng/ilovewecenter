@@ -1,13 +1,12 @@
 <?php TPL::output('global/header_meta.tpl.htm'); ?>
 <?php
     $nav=array(
-        0=>array('url'=>'explore','title'=>'首页','status'=>'Y','is_user'=>0,'icon'=>'icon icon-home'),
-        1=>array('url'=>'question','title'=>'问答','status'=>'Y','is_user'=>0,'icon'=>'icon icon-ask'),
-        2=>array('url'=>'article','title'=>'文章','status'=>'Y','is_user'=>0,'icon'=>'icon icon-column'),
-        3=>array('url'=>'topic','title'=>'话题','status'=>'Y','is_user'=>0,'icon'=>'icon icon-topic'),
-        4=>array('url'=>'notifications','title'=>'通知','status'=>'Y','is_user'=>1,'icon'=>'icon icon-bell'),
-        5=>array('url'=>'home','title'=>'动态','status'=>'Y','is_user'=>1,'icon'=>'icon icon-list'),
-        6=>array('url'=>'help','title'=>'帮助','status'=>get_setting('enable_help_center'),'is_user'=>0,'icon'=>'icon icon-bulb'),
+		0=>array('url'=>'home','title'=>'动态','status'=>'Y','is_user'=>1,'icon'=>'icon icon-home'),
+		1=>array('url'=>'column','title'=>'专栏','status'=>get_setting('enable_column'),'is_user'=>0,'icon'=>'icon icon-column'),
+		2=>array('url'=>'explore','title'=>'发现','status'=>'Y','is_user'=>0,'icon'=>'icon icon-list'),
+		3=>array('url'=>'topic','title'=>'话题','status'=>'Y','is_user'=>0,'icon'=>'icon icon-topic'),
+		4=>array('url'=>'notifications','title'=>'通知','status'=>'Y','is_user'=>1,'icon'=>'icon icon-bell'),
+		5=>array('url'=>'help','title'=>'帮助','status'=>get_setting('enable_help_center'),'is_user'=>0,'icon'=>'icon icon-bulb'),
     );
 	if(!$this->user_id){	
 		foreach($nav as $k=>$v){
@@ -105,7 +104,6 @@
 					</li>
 					<?php } ?> -->
 					<!-- <?php if (get_setting('enable_help_center') == 'Y' && (!$this->user_id || get_setting('enable_column')=='N')) { ?><li><a href="help/"<?php if ($_GET['app'] == 'help') { ?> class="active"<?php } ?>><i class="icon icon-bulb"></i> <?php _e('帮助'); ?></a></li><?php } ?> -->
-					<!--
 					<li>
 						<a style="font-weight:bold;">· · ·</a>
 						<div class="dropdown-list pull-right">
@@ -127,7 +125,6 @@
 							</ul>
 						</div>
 					</li>
-					-->
 				  </ul>
 				</nav>
 			</div>
