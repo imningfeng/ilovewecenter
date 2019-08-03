@@ -1,3 +1,6 @@
+# 此模板已转移至新仓库，这个仓库不再更新，新仓库地址：
+https://github.com/imningfeng/WeCenterDefault
+
 [![screenshot.png](https://i.loli.net/2019/07/18/5d308497e0ed434271.png)](https://i.loli.net/2019/07/18/5d308497e0ed434271.png)
 
 ## ilovewecenter
